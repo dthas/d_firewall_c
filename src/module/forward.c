@@ -1,5 +1,5 @@
 //===========================================================================
-// local_out.c
+// forward.c
 //   Copyright (C) 2016 Free Software Foundation, Inc.
 //   Originally by ZhaoFeng Liang <zhf.liang@hotmail.com>
 //
