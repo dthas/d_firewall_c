@@ -21,7 +21,7 @@
 #===========================================================================
 
 obj-m = dfirewall.o
-dfirewall-objs 	= pre_routing.o post_routing.o local_in.o local_out.o forward.o lib.o main.o
+dfirewall-objs 	= pre_routing.o post_routing.o local_in.o local_out.o forward.o lib.o lib_port.o main.o
 
 KDIR 		:= /usr/src/linux-headers-$(shell uname -r)
 

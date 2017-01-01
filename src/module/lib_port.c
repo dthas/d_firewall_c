@@ -1,5 +1,5 @@
 //===========================================================================
-// lib.c
+// lib_port.c
 //   Copyright (C) 2016 Free Software Foundation, Inc.
 //   Originally by ZhaoFeng Liang <zhf.liang@hotmail.com>
 //
@@ -30,21 +30,22 @@
 
 #include	"module_prototype.h"
 
+
 //=================================================================
-// 打印数据包信息
+// 通过端口过滤tcp数据包
 //=================================================================
-int print_info(char *type,struct sk_buff *skb)  
+int refuse_port(char *type,struct sk_buff *skb)  
 {  
     int retval = NF_ACCEPT;  
          
     struct iphdr *iph = ip_hdr(skb);    
     struct tcphdr *tcp = NULL;  
-     
-    // 打印tcp数据包  
+      
+    //对于tcp数据包（udp的暂时不算）  
     if( iph->protocol == IPPROTO_TCP )  
     {  
-        tcp = tcp_hdr(skb);  
-                 
+        tcp = tcp_hdr(skb);	
+  
         printk("%s: "  
                 "%d.%d.%d.%d => %d.%d.%d.%d "  
                 "%u -- %u\n",  
@@ -60,7 +61,23 @@ int print_info(char *type,struct sk_buff *skb)
                 htons(tcp->source),  
                 htons(tcp->dest)  
                 );  
-      }  
+  
+	
+	switch(htons(tcp->dest))
+	{
+		//丢弃 80 , 1000, 10000 端口数据包
+		case 80:
+		case 1000:
+		case 10000:
+			retval 	= NF_DROP;
+			break;
+		default:
+			retval	= NF_ACCEPT;
+			break;
+	}
+    }  
   
     return retval;  
-}  
+} 
+
+
