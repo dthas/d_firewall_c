@@ -40,6 +40,8 @@ static struct nf_hook_ops nho_forward;
  
 static int __init dfirewall_init(void)  
 {
+	printk("======================hook_init()======================\n");
+
 	struct nf_hook_ops *p_nho	= NULL;
 
 	//----------------------------------------------------------------------
@@ -127,7 +129,9 @@ static int __init dfirewall_init(void)
 }  
   
 static void __exit dfirewall_exit(void)  
-{  
+{
+	printk("======================hook_exit()======================\n");
+
 	nf_unregister_hook(&nho_pre_routing);
 	nf_unregister_hook(&nho_post_routing);
 	nf_unregister_hook(&nho_local_in);
