@@ -24,12 +24,21 @@
 #include	"proc_prototype.h"
 #include	<stdio.h>
 
-PUBLIC	s32	main(s32 argc, s8*argv[])
+
+extern test();
+
+PUBLIC	int	main(int argc, char*argv[])
 {
 	
 	printf("--start proc--,%d, %s\n",argc, argv[1]);
 
-	
+	sys_init_module(test);
+
+	sys_delete_module(test);
+
+	//module_init(test);
+
+	//module_exit(test);
 
 	printf("--end proc--\n");
 	

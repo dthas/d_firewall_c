@@ -1,0 +1,1 @@
+cmd_/media/gah/vdisk/vdisk/dthas/d_firewall_c/test/modules.o := ld -m elf_x86_64   -r -o /media/gah/vdisk/vdisk/dthas/d_firewall_c/test/modules.o /media/gah/vdisk/vdisk/dthas/d_firewall_c/test/mymodule.o 

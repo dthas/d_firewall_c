@@ -1,0 +1,1 @@
+cmd_/media/gah/vdisk/vdisk/dthas/d_firewall_c/test/modules.ko := ld -r -m elf_x86_64 -T ./scripts/module-common.lds --build-id  -o /media/gah/vdisk/vdisk/dthas/d_firewall_c/test/modules.ko /media/gah/vdisk/vdisk/dthas/d_firewall_c/test/modules.o /media/gah/vdisk/vdisk/dthas/d_firewall_c/test/modules.mod.o

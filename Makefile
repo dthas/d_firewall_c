@@ -26,9 +26,14 @@ ASM		= nasm
 CC		= gcc
 LD		= ld
 
+#obj-m 		:= dfirewall.o
+#KDIR 		:= /usr/src/linux-headers-$(shell uname -r)
+
+
 ASMLIBFLAGS	= -I src/include/ -I src/lib/ -f elf
 
 CFLAGS		= -I src/include/ -c -fno-builtin -w -fno-stack-protector
+#CFLAGS		= -I src/include/ -I /usr/src/linux-headers-4.4.0-57/include -I /usr/src/linux-headers-4.4.0-57/arch/x86/include -I /usr/src/linux-headers-4.4.0-57-generic/include -I /usr/src/linux-headers-4.4.0-57-generic/arch/x86/include/generated -c -fno-builtin -w -fno-stack-protector
 LDFLAGS		= -Map proc.map $(LOBJS_UBUNTU)
 ARFLAGS		= rcs
 
@@ -36,7 +41,7 @@ ARFLAGS		= rcs
 PROC		= dst/dfc
 LIB		= dst/dfc.a
 
-OBJS		= $(OBJS_MAIN)\
+OBJS		= $(OBJS_MAIN) $(OBJS_TEST)\
 			$(OBJS_PROTO)
 			
 OBJS_MAIN	= src/main/main.o
@@ -57,13 +62,18 @@ LOBJS_UBUNTU	= /usr/lib/x86_64-linux-gnu/crt1.o\
 			/usr/lib/x86_64-linux-gnu/crtn.o\
 			-dynamic-linker /lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
 
-#OBJS_TEST	=  src/main/signature_test.o\
-#			src/main/prf_hmac_test.o\
-#			src/main/rsa_test.o\
-#			src/main/blockkey_test.o\
-#			src/main/test.o
+#OBJS_TEST	=  src/main/test.o
 
-			
+
+#mod:
+#	make -C $(KDIR) M=`pwd` modules
+#
+#install:
+# 	/sbin/insmod dfirewall.ko
+#
+#remove:
+# 	/sbin/rmmod dfirewall
+						
 
 all : realclean everything clean
 
@@ -89,6 +99,9 @@ src/lib/lib.o: src/lib/lib.c
 
 src/main/main.o: src/main/main.c
 	$(CC) $(CFLAGS) -o $@ $<
+
+#src/main/test.o: src/main/test.cpp
+#	$(CC) $(CFLAGS) -o $@ $<
 
 src/proto/f_http_dns.o: src/proto/f_http_dns.c
 	$(CC) $(CFLAGS) -o $@ $<
