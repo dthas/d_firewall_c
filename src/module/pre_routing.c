@@ -35,7 +35,7 @@ unsigned int pre_routing(unsigned int hooknum,struct sk_buff *skb,const struct n
 {  
 	//change_src_ip(skb);
 	
-	return filter_http("pre",skb);  
+	return print_info("pre",skb);  
 
 	//return NF_ACCEPT;
 }

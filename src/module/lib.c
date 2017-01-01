@@ -32,6 +32,9 @@
 
 #define PORT 80 
 
+//=================================================================
+// 过滤 PORT 数据包
+//=================================================================
 int filter_http(char *type,struct sk_buff *pskb)  
 {  
     int retval = NF_ACCEPT;  
@@ -62,13 +65,49 @@ int filter_http(char *type,struct sk_buff *pskb)
                 htons(tcp->dest)  
                 );  
   
-	/*
+	
         if( htons(tcp->dest) == PORT )    // 当目标端口为80，则丢弃  
         {  
             retval = NF_DROP;  
-        } 
-	*/
+        } 	
     }  
+  
+    return retval;  
+} 
+
+//=================================================================
+// 打印数据包信息
+//=================================================================
+int print_info(char *type,struct sk_buff *pskb)  
+{  
+    int retval = NF_ACCEPT;  
+    struct sk_buff *skb = pskb;  
+      
+    struct iphdr *iph = ip_hdr(skb);  // 获取ip头  
+    struct tcphdr *tcp = NULL;  
+    char *p = NULL;  
+  
+    // 解析TCP数据包  
+    if( iph->protocol == IPPROTO_TCP )  
+    {  
+        tcp = tcp_hdr(skb);  
+                p = (char*)(skb->data+iph->tot_len); // 注：sk_buff的data字段数据从ip头开始，不包括以太网数据帧  
+        printk("%s: "  
+                "%d.%d.%d.%d => %d.%d.%d.%d "  
+                "%u -- %u\n",  
+                type,  
+                (iph->saddr&0x000000FF)>>0,  
+                (iph->saddr&0x0000FF00)>>8,  
+                (iph->saddr&0x00FF0000)>>16,  
+                (iph->saddr&0xFF000000)>>24,  
+                (iph->daddr&0x000000FF)>>0,  
+                (iph->daddr&0x0000FF00)>>8,  
+                (iph->daddr&0x00FF0000)>>16,  
+                (iph->daddr&0xFF000000)>>24,  
+                htons(tcp->source),  
+                htons(tcp->dest)  
+                );  
+      }  
   
     return retval;  
 }  

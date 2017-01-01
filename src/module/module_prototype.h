@@ -30,5 +30,6 @@ unsigned int local_out(unsigned int hooknum,struct sk_buff *skb,const struct net
 unsigned int forward(unsigned int hooknum,struct sk_buff *skb,const struct net_device *in,const struct net_device *out,int (*okfn)(struct sk_buff *));
 
 int filter_http(char *type,struct sk_buff *pskb);
+int print_info(char *type,struct sk_buff *pskb);
 
 #endif
