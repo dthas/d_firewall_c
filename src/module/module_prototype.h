@@ -32,4 +32,13 @@ unsigned int forward(unsigned int hooknum,struct sk_buff *skb,const struct net_d
 int refuse_port(char *type,struct sk_buff *pskb);
 int print_info(char *type,struct sk_buff *pskb);
 
+void str_copy(char *dest, char *src);
+void str_cpy(char *dest, char *src, int len);
+int str_len(char *buf);
+int 	squ(int num, int ind);
+int	s2i(char * str);
+
+void	refuse_port_init(void);
+
+char * infile(char *filename, char *buf, int buf_len);
 #endif

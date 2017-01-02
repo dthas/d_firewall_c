@@ -28,7 +28,7 @@
 #include 	<linux/inet.h> 
 
 #include	"module_prototype.h"
-
+#include	"module_global.h"
 
 
 
@@ -37,6 +37,8 @@ static struct nf_hook_ops nho_post_routing;
 static struct nf_hook_ops nho_local_in;
 static struct nf_hook_ops nho_local_out;
 static struct nf_hook_ops nho_forward;
+
+
  
 static int __init dfirewall_init(void)  
 {
@@ -124,7 +126,12 @@ static int __init dfirewall_init(void)
 	        return -1;  
 	}  
 
-	
+	//----------------------------------------------------------------------
+	//初始化 refuse_port
+	//----------------------------------------------------------------------
+	refuse_port_init();
+
+
 	return 0;  
 }  
   

@@ -64,3 +64,116 @@ int print_info(char *type,struct sk_buff *skb)
   
     return retval;  
 }  
+
+void str_copy(char *dest, char *src)
+{
+	while(*src != NULL)
+	{
+		*dest = *src;
+		dest++;
+		src++;
+	}
+}
+
+void str_cpy(char *dest, char *src, int len)
+{
+	int i;
+
+	for(i=0; i<len; i++)
+	{
+		*dest++ = *src++;
+	}	
+}
+
+
+int str_len(char *buf)
+{
+	int len = 0;
+
+	while(*buf != NULL)
+	{
+		len++;
+		buf++;
+	}
+
+	return len;
+}
+
+
+int 	squ(int num, int ind)
+{
+	int i; 
+	int res = 1;
+	for(i=0; i<num; i++)
+	{
+		res = res * ind;
+	}
+
+	return res;
+}
+
+int	s2i(char * str)
+{
+	int len	= str_len(str);
+	int sum = 0;
+
+	//for test
+	//printk("s2i::str=%s, len=%d\n",str, len);
+
+	int i,j,k;
+	for(i=len-1, j=0; i>=0; i--,j++)
+	{
+		k 	= str[i] - '0';
+		k 	= k * squ(i, 10);
+
+		//for test
+		//printk("s2i::k=%d, ",k);
+
+		sum	= sum + k;
+
+		//for test
+		//printk("s2i::sum=%d\n",sum);
+	}
+
+	return sum;
+}
+/*
+//=================================================================
+// 输出信息
+//=================================================================
+void	outfile(char *filename, char *data, int len)
+{
+	FILE *fp_w;
+	int i;
+
+	fp_w =	fopen(filename,"w");
+
+	for(i=0; i<len; i++)
+	{
+		fputc(*(data+i), fp_w);		
+	}
+
+	fclose(fp_w);
+}
+
+
+//=================================================================
+// 输出信息
+//=================================================================
+char*	infile(char *filename, char *data, int len)
+{
+	FILE *fp_r;
+	int i;
+
+	fp_r =	fopen(filename,"r");
+
+	for(i=0; i<len; i++)
+	{
+		fgetc(*(data+i), fp_r);		
+	}
+
+	fclose(fp_r);
+
+	return data;
+}
+*/

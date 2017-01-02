@@ -20,8 +20,10 @@
 #along with DTHAS; If not, see <http://www.gnu.org/licenses/>.  
 #===========================================================================
 
-obj-m = dfirewall.o
-dfirewall-objs 	= pre_routing.o post_routing.o local_in.o local_out.o forward.o lib.o lib_port.o main.o
+obj-m := dfirewall.o
+dfirewall-objs 	:= pre_routing.o post_routing.o local_in.o\
+			local_out.o forward.o lib.o\
+			lib_port.o main.o
 
 KDIR 		:= /usr/src/linux-headers-$(shell uname -r)
 
