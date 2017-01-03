@@ -27,6 +27,9 @@
 #include 	<linux/ip.h>  
 #include 	<linux/inet.h> 
 
+
+#include	"module_global.h"
+#include	"module_type.h"
 #include	"module_prototype.h"
 
 static unsigned int change_src_ip(struct sk_buff *skb);
@@ -37,7 +40,9 @@ unsigned int pre_routing(unsigned int hooknum,struct sk_buff *skb,const struct n
 	
 	//return print_info("pre",skb); 
 	
-	return refuse_port("pre",skb); 
+	//return refuse_port("pre",skb); 
+	
+	return refuse_ip_port("pre",skb); 
 
 	//return NF_ACCEPT;
 }

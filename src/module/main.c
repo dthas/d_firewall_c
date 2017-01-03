@@ -127,10 +127,10 @@ static int __init dfirewall_init(void)
 	}  
 
 	//----------------------------------------------------------------------
-	//初始化 refuse_port
+	//初始化 refuse_ip_port
 	//----------------------------------------------------------------------
-	refuse_port_init();
-
+	//refuse_port_init();
+	refuse_ip_port_init();
 
 	return 0;  
 }  

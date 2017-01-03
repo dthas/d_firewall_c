@@ -29,16 +29,26 @@ unsigned int local_in(unsigned int hooknum,struct sk_buff *skb,const struct net_
 unsigned int local_out(unsigned int hooknum,struct sk_buff *skb,const struct net_device *in,const struct net_device *out,int (*okfn)(struct sk_buff *));
 unsigned int forward(unsigned int hooknum,struct sk_buff *skb,const struct net_device *in,const struct net_device *out,int (*okfn)(struct sk_buff *));
 
-int refuse_port(char *type,struct sk_buff *pskb);
-int print_info(char *type,struct sk_buff *pskb);
+//lib_port.c
+int 	refuse_port(char *type,struct sk_buff *pskb);
+void	refuse_port_init(void);
+int 	print_info(char *type,struct sk_buff *pskb);
 
-void str_copy(char *dest, char *src);
-void str_cpy(char *dest, char *src, int len);
-int str_len(char *buf);
+//lib_ip_port.c
+void	refuse_ip_port_init(void);
+int 	refuse_ip_port(char *type,struct sk_buff *pskb);
+
+//lib.c
+void 	str_copy(char *dest, char *src);
+void 	str_cpy(char *dest, char *src, int len);
+int 	str_len(char *buf);
 int 	squ(int num, int ind);
 int	s2i(char * str);
+void 	s2ip(struct iaddr * ip, char *buf);
+int 	chk_src_dest_ip(struct iaddr *src_ip, struct iaddr *dest_ip);
+void	empty_buf(unsigned int start_addr, int size_in_byte);
+//char * infile(char *filename, char *buf, int buf_len);
 
-void	refuse_port_init(void);
 
-char * infile(char *filename, char *buf, int buf_len);
+
 #endif

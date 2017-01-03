@@ -28,7 +28,11 @@
 #include 	<linux/tcp.h>
 #include 	<linux/inet.h> 
 
+
+#include	"module_global.h"
+#include	"module_type.h"
 #include	"module_prototype.h"
+
 
 //=================================================================
 // 打印数据包信息
@@ -121,10 +125,10 @@ int	s2i(char * str)
 	//printk("s2i::str=%s, len=%d\n",str, len);
 
 	int i,j,k;
-	for(i=len-1, j=0; i>=0; i--,j++)
+	for(i=len-1, j=0; i>=0; i--,j++)	
 	{
 		k 	= str[i] - '0';
-		k 	= k * squ(i, 10);
+		k 	= k * squ(j, 10);		
 
 		//for test
 		//printk("s2i::k=%d, ",k);
@@ -137,6 +141,99 @@ int	s2i(char * str)
 
 	return sum;
 }
+
+
+
+//===========================================================================
+// change string(192.168.131.1) to struct iaddr
+//===========================================================================
+void s2ip(struct iaddr * ip, char *buf)
+{
+	//for test
+	printk("1)s2ip::buf=%s\n",buf);
+
+
+	char tmpb[4];
+	int len 	= str_len(buf);
+
+	//for test
+	printk("2)s2ip::len=%d\n",len);
+
+	unsigned char *q = (unsigned char *)ip;
+
+	empty_buf(tmpb, 4);
+
+	//chang . to \0
+	int i,j;
+	for(j=0, i=0; i<=len, q!=NULL; i++)
+	{
+		if(buf[i] == NULL)
+		{
+			break;
+		}
+		else if(buf[i] == 0x2e)		//判断 .
+		{
+			//buf[i] = NULL;
+			tmpb[j]= NULL;
+			*q = s2i(tmpb);
+
+			empty_buf(tmpb, 4);
+			j = 0;
+			q++;
+		}
+		else
+		{
+			tmpb[j] = buf[i];
+			j++;
+		}
+
+		//for test
+		printk("3)s2ip::j=%d, *q=%d\n",j, *q);
+	}
+
+	tmpb[j]= NULL;
+	*q = s2i(tmpb);
+
+	//for test
+	printk("4)s2ip::j=%d, *q=%d\n",j, *q);
+}
+
+int chk_src_dest_ip(struct iaddr *src_ip, struct iaddr *dest_ip)
+{
+	if( (src_ip->addr1 == dest_ip->addr1) &&
+	    (src_ip->addr2 == dest_ip->addr2) &&
+	    (src_ip->addr3 == dest_ip->addr3) &&
+	    (src_ip->addr4 == dest_ip->addr4) )
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+
+void	empty_buf(unsigned int start_addr, int size_in_byte)
+{
+	int size= size_in_byte;
+	char *p	= (char*)start_addr;
+
+	int i;
+	for(i=0; i < size; i++)
+	{
+		p[i] = '\0';
+	} 
+}
+
+
+
+
+
+
+
+
+
 /*
 //=================================================================
 // 输出信息

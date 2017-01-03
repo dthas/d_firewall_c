@@ -1,5 +1,5 @@
 //===========================================================================
-// module_global.h
+// module_type.h
 //
 //   Copyright (C) 2016 Free Software Foundation, Inc.
 //   Originally by ZhaoFeng Liang <zhf.liang@hotmail.com>
@@ -20,12 +20,29 @@
 //along with DTHAS_TLS; If not, see <http://www.gnu.org/licenses/>.  
 //===========================================================================
 
-#ifndef	_MODULE_GLOBAL_H_
-#define	_MODULE_GLOBAL_H_
+#ifndef	_MODULE_TYPE_H_
+#define	_MODULE_TYPE_H_
 
-#define	NR_REFUSE_PORT	65535
-#define	NR_CHAR_FILE	10240
-#define	NR_CHAR_LINE	64
+#define	PUBLIC		
+#define	PRIVATE	static	
+
+struct hwaddr
+{
+	unsigned char	addr1;
+	unsigned char	addr2;
+	unsigned char	addr3;
+	unsigned char	addr4;
+	unsigned char	addr5;
+	unsigned char	addr6;
+};
+
+struct iaddr
+{
+	unsigned char	addr1;
+	unsigned char	addr2;
+	unsigned char	addr3;
+	unsigned char	addr4;
+};
 
 
 
