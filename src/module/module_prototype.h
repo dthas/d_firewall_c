@@ -47,7 +47,7 @@ int	s2i(char * str);
 void 	s2ip(struct iaddr * ip, char *buf);
 int 	chk_src_dest_ip(struct iaddr *src_ip, struct iaddr *dest_ip);
 void	empty_buf(unsigned int start_addr, int size_in_byte);
-//char * infile(char *filename, char *buf, int buf_len);
+char * infile(char *filename, char *buf, int buf_len);
 
 
 

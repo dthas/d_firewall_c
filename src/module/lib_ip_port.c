@@ -39,7 +39,6 @@
 #include	"module_prototype.h"
 
 static struct ip_port arr_refuse_ip_port[NR_REFUSE_IP_PORT];
-//static int *p_refuse_ip_port;
 
 //=================================================================
 // 初始化 refuse port
@@ -76,6 +75,9 @@ void refuse_ip_port_init()
 	char r_port[16];
 	int  i_len;
 
+	//infile()函数目前会引起内核出错.....（暂停使用）
+	//infile("config/refuse_ip_port.config", r_buf, NR_CHAR_FILE);
+	
 	mm_segment_t old_fs;
 	loff_t pos; 
 	struct file *fp_r = NULL;
@@ -95,8 +97,6 @@ void refuse_ip_port_init()
 	set_fs(old_fs);
 
 	filp_close(fp_r,NULL);
-
-
 	
 	//----------------------------------------------------------------------
 	//将refuse_port.config内容读入 arr_refuse_ip_port[]
@@ -165,45 +165,7 @@ void refuse_ip_port_init()
 						//-----------------------------------------------------
 						// ip 处理
 						//-----------------------------------------------------
-						i_len 	= str_len(r_ip);
-
-						//for test
-						//printk("i_len=%d, r_ip=%s, r_port=%s\n",i_len, r_ip, r_port);
-
-						char r_tmp[4];
-						int x,y,z;
-
-						q = (unsigned char *)(&(arr_refuse_ip_port[i].ip));
-
-						for(x=0,y=0;x<=i_len;x++)
-						{
-							if(r_ip[x] == 0x2e)
-							{
-								r_tmp[y]	= NULL;
-								y		= 0;
-
-								*q = s2i(r_tmp);
-
-								//for test
-								//printk("	s2ip::i_len=%d, y=%d, r_tmp=%s, *q=%d\n",i_len, y, r_tmp, *q);
-								
-								q++;								
-							}
-							else if(r_ip[x] == NULL)
-							{
-								r_tmp[y]	= NULL;
-
-								*q = s2i(r_tmp);
-
-								//for test
-								//printk("	s2ip::i_len=%d, y=%d, r_tmp=%s, *q=%d\n",i_len, y, r_tmp, *q);
-							}
-							else
-							{
-								r_tmp[y]	= r_ip[x];
-								y++;
-							}
-						}
+						s2ip(&(arr_refuse_ip_port[i].ip), r_ip);
 
 						//-----------------------------------------------------------
 						//port的处理

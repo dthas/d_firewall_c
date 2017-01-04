@@ -28,6 +28,9 @@
 #include 	<linux/tcp.h>
 #include 	<linux/inet.h> 
 
+#include 	<linux/fs.h>   
+#include 	<asm/uaccess.h>   
+#include 	<linux/mm.h>
 
 #include	"module_global.h"
 #include	"module_type.h"
@@ -149,54 +152,49 @@ int	s2i(char * str)
 //===========================================================================
 void s2ip(struct iaddr * ip, char *buf)
 {
-	//for test
-	printk("1)s2ip::buf=%s\n",buf);
-
-
-	char tmpb[4];
-	int len 	= str_len(buf);
+	int i_len 	= str_len(buf);
 
 	//for test
-	printk("2)s2ip::len=%d\n",len);
+	//printk("1) s2ip :: i_len=%d, r_ip=%s\n",i_len, buf);
 
-	unsigned char *q = (unsigned char *)ip;
+	char r_tmp[4];
+	int x,y,z;
 
-	empty_buf(tmpb, 4);
+	unsigned char *q = ip;
 
-	//chang . to \0
-	int i,j;
-	for(j=0, i=0; i<=len, q!=NULL; i++)
+	for(x=0,y=0;x<=i_len;x++)
 	{
-		if(buf[i] == NULL)
+		if(buf[x] == 0x2e)
 		{
-			break;
-		}
-		else if(buf[i] == 0x2e)		//判断 .
-		{
-			//buf[i] = NULL;
-			tmpb[j]= NULL;
-			*q = s2i(tmpb);
+			r_tmp[y]	= NULL;
+			y		= 0;
 
-			empty_buf(tmpb, 4);
-			j = 0;
-			q++;
+			*q = s2i(r_tmp);
+
+			//for test
+			//printk("2) s2ip::i_len=%d, y=%d, r_tmp=%s, *q=%d\n",i_len, y, r_tmp, *q);
+								
+			q++;								
+		}
+		else if(buf[x] == NULL)
+		{
+			r_tmp[y]	= NULL;
+
+			*q = s2i(r_tmp);
+
+			//for test
+			//printk("3) s2ip::i_len=%d, y=%d, r_tmp=%s, *q=%d\n",i_len, y, r_tmp, *q);
 		}
 		else
 		{
-			tmpb[j] = buf[i];
-			j++;
+			r_tmp[y]	= buf[x];
+			y++;
 		}
-
-		//for test
-		printk("3)s2ip::j=%d, *q=%d\n",j, *q);
-	}
-
-	tmpb[j]= NULL;
-	*q = s2i(tmpb);
-
-	//for test
-	printk("4)s2ip::j=%d, *q=%d\n",j, *q);
+	}						
 }
+
+
+
 
 int chk_src_dest_ip(struct iaddr *src_ip, struct iaddr *dest_ip)
 {
@@ -252,25 +250,40 @@ void	outfile(char *filename, char *data, int len)
 
 	fclose(fp_w);
 }
-
+*/
 
 //=================================================================
 // 输出信息
 //=================================================================
 char*	infile(char *filename, char *data, int len)
 {
-	FILE *fp_r;
-	int i;
+	//for test
+	printk("infile::filename=%s, len=%d\n", filename, len);
 
-	fp_r =	fopen(filename,"r");
+	mm_segment_t old_fs;
+	loff_t pos; 
+	struct file *fp_r = NULL;
+	int j;
+		
+	fp_r = filp_open(filename, O_RDONLY,0);	
+		
+	old_fs	= get_fs();
+  	set_fs(KERNEL_DS);  
+  	pos	= 0;
+	vfs_read(fp_r,data,sizeof(data),&pos);
+	set_fs(old_fs);
 
-	for(i=0; i<len; i++)
+	/*
+	//for test
+	printk("infile::data:\n");
+	for(j=0;j<NR_CHAR_FILE;j++)
 	{
-		fgetc(*(data+i), fp_r);		
+		printk("%02x", data[j]);
 	}
+	*/
 
-	fclose(fp_r);
+	filp_close(fp_r,NULL);
 
 	return data;
 }
-*/
+
