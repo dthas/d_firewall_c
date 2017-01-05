@@ -49,6 +49,11 @@ int 	chk_src_dest_ip(struct iaddr *src_ip, struct iaddr *dest_ip);
 void	empty_buf(unsigned int start_addr, int size_in_byte);
 char * infile(char *filename, char *buf, int buf_len);
 
+//lib_ipv4.c
+int ipv4_trans_info(struct sk_buff *skb);
+int ipv4_modi(int type, struct iaddr *ip, struct sk_buff *skb);
+int ipv4_modi_main(struct sk_buff *skb);
+int ipv4_prt_info(struct sk_buff *skb);
 
 
 #endif

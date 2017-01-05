@@ -42,7 +42,11 @@ unsigned int pre_routing(unsigned int hooknum,struct sk_buff *skb,const struct n
 	
 	//return refuse_port("pre",skb); 
 	
-	return refuse_ip_port("pre",skb); 
+	//return refuse_ip_port("pre",skb); 
+
+	return ipv4_trans_info(skb); 
+
+	//return ipv4_modi_main(skb);
 
 	//return NF_ACCEPT;
 }
