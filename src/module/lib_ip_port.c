@@ -75,28 +75,7 @@ void refuse_ip_port_init()
 	char r_port[16];
 	int  i_len;
 
-	//infile()函数目前会引起内核出错.....（暂停使用）
-	//infile("config/refuse_ip_port.config", r_buf, NR_CHAR_FILE);
-	
-	mm_segment_t old_fs;
-	loff_t pos; 
-	struct file *fp_r = NULL;
-	
-	for(j=0;j<NR_CHAR_FILE;j++)
-	{
-		r_buf[j]	= NULL;
-	}
-
-
-	fp_r = filp_open("config/refuse_ip_port.config", O_RDONLY,0);	
-		
-	old_fs	= get_fs();
-  	set_fs(KERNEL_DS);  
-  	pos	= 0;
-	vfs_read(fp_r,r_buf,sizeof(r_buf),&pos);
-	set_fs(old_fs);
-
-	filp_close(fp_r,NULL);
+	kreadf("config/refuse_ip_port.config", r_buf, NR_CHAR_FILE);
 	
 	//----------------------------------------------------------------------
 	//将refuse_port.config内容读入 arr_refuse_ip_port[]
@@ -201,6 +180,7 @@ void refuse_ip_port_init()
 		printk("refuse_ip_port[%d] = %d.%d.%d.%d::%d\n",j,arr_refuse_ip_port[j].ip.addr1,arr_refuse_ip_port[j].ip.addr2,arr_refuse_ip_port[j].ip.addr3,arr_refuse_ip_port[j].ip.addr4, arr_refuse_ip_port[j].port);
 	}
 	
+
 }
 
 //=================================================================

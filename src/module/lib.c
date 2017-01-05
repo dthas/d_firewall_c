@@ -255,35 +255,26 @@ void	outfile(char *filename, char *data, int len)
 //=================================================================
 // 输出信息
 //=================================================================
-char*	infile(char *filename, char *data, int len)
+void	kreadf(char *filename, char *data, int len)
 {
-	//for test
-	printk("infile::filename=%s, len=%d\n", filename, len);
-
 	mm_segment_t old_fs;
 	loff_t pos; 
 	struct file *fp_r = NULL;
 	int j;
+
+	for(j=0;j<len;j++)
+	{
+		data[j]	= NULL;
+	}
 		
 	fp_r = filp_open(filename, O_RDONLY,0);	
 		
 	old_fs	= get_fs();
   	set_fs(KERNEL_DS);  
   	pos	= 0;
-	vfs_read(fp_r,data,sizeof(data),&pos);
-	set_fs(old_fs);
-
-	/*
-	//for test
-	printk("infile::data:\n");
-	for(j=0;j<NR_CHAR_FILE;j++)
-	{
-		printk("%02x", data[j]);
-	}
-	*/
+	vfs_read(fp_r,data,len,&pos);
+	set_fs(old_fs);	
 
 	filp_close(fp_r,NULL);
-
-	return data;
 }
 
