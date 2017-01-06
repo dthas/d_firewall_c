@@ -24,7 +24,7 @@ obj-m := dfirewall.o
 dfirewall-objs 	:= pre_routing.o post_routing.o local_in.o\
 			local_out.o forward.o lib.o\
 			lib_port.o lib_ip_port.o\
-			lib_ipv4.o main.o
+			lib_ipv4.o lib_tcp.o lib_arp.o main.o
 
 KDIR 		:= /usr/src/linux-headers-$(shell uname -r)
 

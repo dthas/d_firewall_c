@@ -56,4 +56,17 @@ int ipv4_modi_main(struct sk_buff *skb);
 int ipv4_prt_info(struct sk_buff *skb);
 
 
+//lib_tcp.c
+int tcp_trans_info(struct sk_buff *skb);
+int tcp_modi_main(struct sk_buff *skb) ;
+int tcp_modi(int type, unsigned int port, struct sk_buff *skb);
+int tcp_prt_info(struct sk_buff *skb);
+
+//lib_arp.c
+int arp_trans_info(struct sk_buff *skb);
+int arp_modi_main(struct sk_buff *skb) ;
+int mac_modi(int type, struct hwaddr *mac, struct sk_buff *skb);
+int mac_prt_info(struct sk_buff *skb);
+
+
 #endif
