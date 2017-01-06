@@ -1,5 +1,5 @@
 //===========================================================================
-// lib_mac.c
+// lib_arp.c
 //   Copyright (C) 2016 Free Software Foundation, Inc.
 //   Originally by ZhaoFeng Liang <zhf.liang@hotmail.com>
 //
@@ -63,11 +63,9 @@ int arp_trans_info(struct sk_buff *skb)
 
 	//----------------------------------------------------------------------
 	//获取arp信息
-	//----------------------------------------------------------------------
-	
+	//----------------------------------------------------------------------	
 	struct ethhdr *mach = (struct ethhdr*)(skb->head + skb->mac_header);
-	//struct ethhdr *mach = (struct ethhdr*)(skb->head);
-
+	
 	src_mac.addr1	= mach->h_source[0];
 	src_mac.addr2	= mach->h_source[1];
 	src_mac.addr3	= mach->h_source[2];
@@ -83,26 +81,6 @@ int arp_trans_info(struct sk_buff *skb)
 	dst_mac.addr6	= mach->h_dest[5];
 
 	mac_type	= mach->h_proto;
-
-/*
-	struct arphdr *mach = arp_hdr(skb); 
-	
-	src_mac.addr1	= mach->ar_sha[0];
-	src_mac.addr2	= mach->ar_sha[1];
-	src_mac.addr3	= mach->ar_sha[2];
-	src_mac.addr4	= mach->ar_sha[3];
-	src_mac.addr5	= mach->ar_sha[4];
-	src_mac.addr6	= mach->ar_sha[5];
-
-	dst_mac.addr1	= mach->ar_tha[0];
-	dst_mac.addr2	= mach->ar_tha[1];
-	dst_mac.addr3	= mach->ar_tha[2];
-	dst_mac.addr4	= mach->ar_tha[3];
-	dst_mac.addr5	= mach->ar_tha[4];
-	dst_mac.addr6	= mach->ar_tha[5];
-
-	mac_type	= mach->ar_op;
-*/
 
 	printk("source mac: %x:%x:%x:%x:%x:%x , dest mac: %x:%x:%x:%x:%x:%x, type: %x\n",  
 		        src_mac.addr1,src_mac.addr2,src_mac.addr3,src_mac.addr4,src_mac.addr5,src_mac.addr6,  
@@ -144,8 +122,7 @@ int arp_modi_main(struct sk_buff *skb)
 int mac_modi(int type, struct hwaddr *mac, struct sk_buff *skb)  
 {  
    	struct ethhdr *mach = (struct ethhdr*)(skb->head + skb->mac_header);
-	//struct ethhdr *mach = (struct ethhdr*)(skb->head);
-    	
+	    	
 	switch(type)
 	{
 
@@ -165,25 +142,6 @@ int mac_modi(int type, struct hwaddr *mac, struct sk_buff *skb)
 			mach->h_dest[4]		= mac->addr5;
 			mach->h_dest[5]		= mac->addr6;
 			break;
-
-/*
-		case TYPE_SRC_MAC:
-			mach->ar_sha[0] = mac->addr1;
-			mach->ar_sha[1]	= mac->addr2;
-			mach->ar_sha[2]	= mac->addr3;
-			mach->ar_sha[3]	= mac->addr4;
-			mach->ar_sha[4]	= mac->addr5;
-			mach->ar_sha[5]	= mac->addr6;
-			break;
-		case TYPE_DST_MAC:
-			mach->ar_tha[0] = mac->addr1;
-			mach->ar_tha[1]	= mac->addr2;
-			mach->ar_tha[2]	= mac->addr3;
-			mach->ar_tha[3]	= mac->addr4;
-			mach->ar_tha[4]	= mac->addr5;
-			mach->ar_tha[5]	= mac->addr6;
-			break;
-*/
 
 		default:
 			return 0;
@@ -221,27 +179,6 @@ int mac_prt_info(struct sk_buff *skb)
 	dst_mac.addr6	= mach->h_dest[5];
 
 	mac_type	= mach->h_proto;
-
-/*
-	struct arphdr *mach = arp_hdr(skb); 
-	
-	src_mac.addr1	= mach->ar_sha[0];
-	src_mac.addr2	= mach->ar_sha[1];
-	src_mac.addr3	= mach->ar_sha[2];
-	src_mac.addr4	= mach->ar_sha[3];
-	src_mac.addr5	= mach->ar_sha[4];
-	src_mac.addr6	= mach->ar_sha[5];
-
-	dst_mac.addr1	= mach->ar_tha[0];
-	dst_mac.addr2	= mach->ar_tha[1];
-	dst_mac.addr3	= mach->ar_tha[2];
-	dst_mac.addr4	= mach->ar_tha[3];
-	dst_mac.addr5	= mach->ar_tha[4];
-	dst_mac.addr6	= mach->ar_tha[5];
-
-	mac_type	= mach->ar_op;
-*/
-
 
 	printk("source mac: %x:%x:%x:%x:%x:%x , dest mac: %x:%x:%x:%x:%x:%x, type: %x\n",  
 		        src_mac.addr1,src_mac.addr2,src_mac.addr3,src_mac.addr4,src_mac.addr5,src_mac.addr6,  
