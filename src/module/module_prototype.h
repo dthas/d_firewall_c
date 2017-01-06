@@ -68,5 +68,16 @@ int arp_modi_main(struct sk_buff *skb) ;
 int mac_modi(int type, struct hwaddr *mac, struct sk_buff *skb);
 int mac_prt_info(struct sk_buff *skb);
 
+//lib_udp.c
+int udp_trans_info(struct sk_buff *skb);
+int udp_modi_main(struct sk_buff *skb) ;
+int udp_modi(int type, unsigned int port, struct sk_buff *skb);
+int udp_prt_info(struct sk_buff *skb);
+
+//lib_icmpv4.c
+int icmpv4_trans_info(struct sk_buff *skb);
+int icmpv4_modi_main(struct sk_buff *skb) ;
+int icmpv4_modi(int type, unsigned char val, struct sk_buff *skb);
+int icmpv4_prt_info(struct sk_buff *skb);
 
 #endif

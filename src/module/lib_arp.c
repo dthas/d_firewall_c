@@ -82,9 +82,9 @@ int arp_trans_info(struct sk_buff *skb)
 
 	mac_type	= mach->h_proto;
 
-	printk("source mac: %x:%x:%x:%x:%x:%x , dest mac: %x:%x:%x:%x:%x:%x, type: %x\n",  
+	printk("source mac: %x:%x:%x:%x:%x:%x , dest mac: %x:%x:%x:%x:%x:%x, type: 0x%04x\n",  
 		        src_mac.addr1,src_mac.addr2,src_mac.addr3,src_mac.addr4,src_mac.addr5,src_mac.addr6,  
-		        dst_mac.addr1,dst_mac.addr2,dst_mac.addr3,dst_mac.addr4,dst_mac.addr5,dst_mac.addr6, mac_type); 
+		        dst_mac.addr1,dst_mac.addr2,dst_mac.addr3,dst_mac.addr4,dst_mac.addr5,dst_mac.addr6, htons(mac_type)); 
 
 	return NF_ACCEPT; 	
 }
@@ -105,10 +105,10 @@ int arp_modi_main(struct sk_buff *skb)
 	mac.addr6	= 0x66;
 
 	//修改“源端口”
-	//mac_modi(TYPE_SRC_MAC, &mac, skb);
+	mac_modi(TYPE_SRC_MAC, &mac, skb);
 
 	//修改“目的端口”
-	mac_modi(TYPE_DST_MAC, &mac, skb);
+	//mac_modi(TYPE_DST_MAC, &mac, skb);
 
 	mac_prt_info(skb);
 
@@ -180,7 +180,7 @@ int mac_prt_info(struct sk_buff *skb)
 
 	mac_type	= mach->h_proto;
 
-	printk("source mac: %x:%x:%x:%x:%x:%x , dest mac: %x:%x:%x:%x:%x:%x, type: %x\n",  
+	printk("source mac: %x:%x:%x:%x:%x:%x , dest mac: %x:%x:%x:%x:%x:%x, type: 0x%04x\n",  
 		        src_mac.addr1,src_mac.addr2,src_mac.addr3,src_mac.addr4,src_mac.addr5,src_mac.addr6,  
-		        dst_mac.addr1,dst_mac.addr2,dst_mac.addr3,dst_mac.addr4,dst_mac.addr5,dst_mac.addr6, mac_type); 
+		        dst_mac.addr1,dst_mac.addr2,dst_mac.addr3,dst_mac.addr4,dst_mac.addr5,dst_mac.addr6, htons(mac_type)); 
 }
