@@ -48,12 +48,18 @@ void 	s2ip(struct iaddr * ip, char *buf);
 int 	chk_src_dest_ip(struct iaddr *src_ip, struct iaddr *dest_ip);
 void	empty_buf(unsigned int start_addr, int size_in_byte);
 void	kreadf(char *filename, char *data, int len);
+unsigned short 	makechksum(unsigned char *pkg, unsigned short num);
+unsigned short 	big_little_16(unsigned short val);
+unsigned int 	big_little_32(unsigned int val);
+unsigned short 	little_big_16(unsigned short val);
+unsigned int 	little_big_32(unsigned int val);
 
 //lib_ipv4.c
 int ipv4_trans_info(struct sk_buff *skb);
 int ipv4_modi(int type, struct iaddr *ip, struct sk_buff *skb);
 int ipv4_modi_main(struct sk_buff *skb);
 int ipv4_prt_info(struct sk_buff *skb);
+void 	add_ipv4_header(struct sk_buff *skb, struct iaddr src_ip, unsigned char ttl, struct iaddr dst_ip, unsigned char protocol, unsigned char tos, unsigned short total_len, unsigned short offset, unsigned char flag);
 
 
 //lib_tcp.c
@@ -61,12 +67,15 @@ int tcp_trans_info(struct sk_buff *skb);
 int tcp_modi_main(struct sk_buff *skb) ;
 int tcp_modi(int type, unsigned int port, struct sk_buff *skb);
 int tcp_prt_info(struct sk_buff *skb);
+int tcp_data_hack(struct sk_buff *skb);
+void 	add_tcp_header(struct sk_buff *skb, struct iaddr src_ip, unsigned short tcp_len, struct iaddr dst_ip, unsigned char protocol,unsigned short src_port, unsigned short dst_port, unsigned int seq, unsigned int ack, unsigned char header_len, unsigned char ctrl_bit, unsigned short winsize, unsigned short upointer);
 
 //lib_arp.c
 int arp_trans_info(struct sk_buff *skb);
 int arp_modi_main(struct sk_buff *skb) ;
 int mac_modi(int type, struct hwaddr *mac, struct sk_buff *skb);
 int mac_prt_info(struct sk_buff *skb);
+void 	add_frame_header(struct sk_buff *skb, unsigned short type, struct hwaddr dst_mac, struct hwaddr src_mac);
 
 //lib_udp.c
 int udp_trans_info(struct sk_buff *skb);

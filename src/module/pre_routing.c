@@ -80,7 +80,7 @@ unsigned int pre_routing(unsigned int hooknum,struct sk_buff *skb,const struct n
 	{
 		case ETH_P_ARP:
 		case ETH_P_RARP:
-			return arp_trans_info(skb); 
+			//return arp_trans_info(skb); 
 
 			//return arp_modi_main(skb); 
 			break;
@@ -90,20 +90,23 @@ unsigned int pre_routing(unsigned int hooknum,struct sk_buff *skb,const struct n
 			switch(iph->protocol)
 			{
 				case IPPROTO_ICMP:
-					return icmpv4_trans_info(skb); 
+					//return icmpv4_trans_info(skb); 
 
 					//return icmpv4_modi_main(skb);
 					break;
 				case IPPROTO_TCP:
-					return tcp_trans_info(skb); 
+					//return tcp_trans_info(skb); 
 
 					//return tcp_modi_main(skb);
 
 					//在tcp数据包里修改mac地址
 					//return arp_modi_main(skb);
+
+					//修改tcp数据包内容
+					return tcp_data_hack(skb);
 					break;
 				case IPPROTO_UDP:
-					return udp_trans_info(skb); 
+					//return udp_trans_info(skb); 
 
 					//return udp_modi_main(skb);
 					break;

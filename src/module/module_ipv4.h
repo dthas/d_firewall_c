@@ -26,7 +26,24 @@
 #define	TYPE_SRC_IP	1
 #define	TYPE_DST_IP	2
 
+#define	IP_VERSION_4		0x4
+#define	IP_HEADER_LEN_IN_BYTE	0x5	//5 * 4 = 20 BYTES
 
+#define IPV4_HEADER_LENGTH	20
+
+struct s_ipv4_header
+{
+	unsigned char version_len;
+	unsigned char tos;
+	unsigned short length;
+	unsigned short iden;
+	unsigned short flag_offset;
+	unsigned char ttl;
+	unsigned char protocol;
+	unsigned short checksum;
+	struct iaddr src_ip;
+	struct iaddr dst_ip;
+};
 
 
 

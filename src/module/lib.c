@@ -278,3 +278,60 @@ void	kreadf(char *filename, char *data, int len)
 	filp_close(fp_r,NULL);
 }
 
+
+//===========================================================================
+// makechksum(unsigned char *pkg, unsigned short num)
+//===========================================================================
+unsigned short 	makechksum(unsigned char *pkg, unsigned short num)
+{
+	unsigned int	res = 0;
+	unsigned short 	*buf=(unsigned short*)pkg;
+
+	while(num > 1)
+	{
+		res += *buf++;
+		num -= 2;
+	}
+
+	if(num > 0)
+	{
+		res += *(unsigned char*)buf;
+	}
+
+	while(res>>16)
+	{
+		res = (res & 0xFFFF) + (res >> 16);
+	}
+
+	return (unsigned short)~res;
+}
+
+
+
+unsigned short 	big_little_16(unsigned short val)
+{
+	unsigned short t_val = val;
+	
+	return(((val<<8)|(t_val>>8)));
+}
+
+unsigned int 	big_little_32(unsigned int val)
+{
+	//unsigned int t_val = val;
+	
+	return(((val>>24)&0xFF)|((val>>8)&0xFF00)|((val<<8)&0xFF0000)|((val<<24)&0xFF000000));
+}
+
+unsigned short 	little_big_16(unsigned short val)
+{
+	unsigned short t_val = val;
+	
+	return(((val<<8)|(t_val>>8)));
+}
+
+unsigned int 	little_big_32(unsigned int val)
+{
+	//unsigned int t_val = val;
+	
+	return(((val>>24)&0xFF)|((val>>8)&0xFF00)|((val<<8)&0xFF0000)|((val<<24)&0xFF000000));
+}

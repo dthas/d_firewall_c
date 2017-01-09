@@ -184,3 +184,32 @@ int mac_prt_info(struct sk_buff *skb)
 		        src_mac.addr1,src_mac.addr2,src_mac.addr3,src_mac.addr4,src_mac.addr5,src_mac.addr6,  
 		        dst_mac.addr1,dst_mac.addr2,dst_mac.addr3,dst_mac.addr4,dst_mac.addr5,dst_mac.addr6, htons(mac_type)); 
 }
+
+
+//===========================================================================
+// add_frame_header
+//===========================================================================
+void 	add_frame_header(struct sk_buff *skb, unsigned short type, struct hwaddr dst_mac, struct hwaddr src_mac)
+{
+	//struct frame8023_header *fh 	= (struct frame8023_header *)(pkg->buffer);
+	struct frame8023_header *fh = (struct frame8023_header*)(skb->head + skb->mac_header);
+		
+	//-------------------------------------------------------------------------
+	// frame header
+	//-------------------------------------------------------------------------
+	fh->dst_mac.addr1	= dst_mac.addr1;
+	fh->dst_mac.addr2	= dst_mac.addr2;
+	fh->dst_mac.addr3	= dst_mac.addr3;
+	fh->dst_mac.addr4	= dst_mac.addr4;
+	fh->dst_mac.addr5	= dst_mac.addr5;
+	fh->dst_mac.addr6	= dst_mac.addr6;
+
+	fh->src_mac.addr1	= src_mac.addr1;
+	fh->src_mac.addr2	= src_mac.addr2;
+	fh->src_mac.addr3	= src_mac.addr3;
+	fh->src_mac.addr4	= src_mac.addr4;
+	fh->src_mac.addr5	= src_mac.addr5;
+	fh->src_mac.addr6	= src_mac.addr6;
+
+	fh->type		= big_little_16(type);	
+}

@@ -63,8 +63,8 @@ struct iphdr {
 }
 */
 
-struct iaddr src_ip;
-struct iaddr dst_ip;
+static struct iaddr src_ip;
+static struct iaddr dst_ip;
 
 //=================================================================
 // 初始化 ipv4_trans_info
@@ -168,3 +168,38 @@ int ipv4_prt_info(struct sk_buff *skb)
 		        src_ip.addr1,src_ip.addr2,src_ip.addr3,src_ip.addr4,  
 		        dst_ip.addr1,dst_ip.addr2,dst_ip.addr3,dst_ip.addr4);	
 }
+
+
+//===========================================================================
+// add_ipv4_header
+//===========================================================================
+void 	add_ipv4_header(struct sk_buff *skb, struct iaddr src_ip, unsigned char ttl, struct iaddr dst_ip, unsigned char protocol, unsigned char tos, unsigned short total_len, unsigned short offset, unsigned char flag)
+{
+	//struct s_ipv4_header * iph = (struct s_ipv4_header *)(&(pkg->buffer[FRAME_HEADER_LENGTH]));
+	struct s_ipv4_header * iph = (struct s_ipv4_header *)ip_hdr(skb);
+
+	iph->version_len	= (IP_VERSION_4 << 4) | IP_HEADER_LEN_IN_BYTE;
+	iph->tos		= tos;
+	iph->length		= total_len;
+	iph->iden		= 0;
+
+	//unsigned short tmp_flag_offset	= (flag << 13) | offset;
+	iph->flag_offset	= big_little_16((flag << 13) | offset) ;
+
+	iph->ttl		= ttl;
+	iph->protocol		= protocol;
+	iph->checksum		= 0;
+
+	iph->src_ip.addr1	= src_ip.addr1; 
+	iph->src_ip.addr2	= src_ip.addr2; 
+	iph->src_ip.addr3	= src_ip.addr3; 
+	iph->src_ip.addr4	= src_ip.addr4; 
+
+	iph->dst_ip.addr1	= dst_ip.addr1;
+	iph->dst_ip.addr2	= dst_ip.addr2;
+	iph->dst_ip.addr3	= dst_ip.addr3;
+	iph->dst_ip.addr4	= dst_ip.addr4;
+
+	iph->checksum		= makechksum(iph,IPV4_HEADER_LENGTH);
+}
+

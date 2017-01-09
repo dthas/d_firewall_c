@@ -26,7 +26,12 @@
 #define	TYPE_SRC_MAC	1
 #define	TYPE_DST_MAC	2
 
-
+struct frame8023_header
+{
+	struct hwaddr dst_mac; 
+	struct hwaddr src_mac; 
+        unsigned short type;       
+};
 
 
 
