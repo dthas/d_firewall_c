@@ -232,25 +232,27 @@ void	empty_buf(unsigned int start_addr, int size_in_byte)
 
 
 
-/*
+
 //=================================================================
 // 输出信息
 //=================================================================
-void	outfile(char *filename, char *data, int len)
+void	kwritef(char *filename, char *data, int len)
 {
-	FILE *fp_w;
-	int i;
-
-	fp_w =	fopen(filename,"w");
-
-	for(i=0; i<len; i++)
-	{
-		fputc(*(data+i), fp_w);		
-	}
-
-	fclose(fp_w);
+	struct file *fp_w = NULL;
+     	mm_segment_t old_fs; 
+     	loff_t pos;  
+     	     	
+	fp_w = filp_open(filename, O_RDWR | O_CREAT, 0644);
+  
+     	old_fs	= get_fs(); 
+     	set_fs(KERNEL_DS);  
+     	pos = 0;  
+     	vfs_write(fp_w, data, len, &pos);  
+	set_fs(old_fs);
+     	
+     	filp_close(fp_w, NULL); 
 }
-*/
+
 
 //=================================================================
 // 输出信息
@@ -282,7 +284,7 @@ void	kreadf(char *filename, char *data, int len)
 //===========================================================================
 // makechksum(unsigned char *pkg, unsigned short num)
 //===========================================================================
-unsigned short 	makechksum(unsigned char *pkg, unsigned short num)
+unsigned short 	makechksum_1(unsigned char *pkg, unsigned short num)
 {
 	unsigned int	res = 0;
 	unsigned short 	*buf=(unsigned short*)pkg;
@@ -306,7 +308,27 @@ unsigned short 	makechksum(unsigned char *pkg, unsigned short num)
 	return (unsigned short)~res;
 }
 
+unsigned short 	makechksum(unsigned char *pkg, unsigned short size)
+{
+	unsigned long cksum 	= 0;
+	unsigned short *buffer	= pkg;
 
+    	while(size>1)
+    	{
+        	cksum += ntohs(*buffer++);
+        	size -= sizeof(unsigned short);
+    	}
+
+    	if(size)
+    	{
+        	cksum += *(unsigned char*)buffer;
+    	}
+
+    	cksum = (cksum >> 16) + (cksum & 0xffff); 
+    	cksum += (cksum >> 16); 
+
+    	return (unsigned short)(~cksum);
+}
 
 unsigned short 	big_little_16(unsigned short val)
 {

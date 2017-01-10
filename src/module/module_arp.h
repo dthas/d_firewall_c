@@ -26,6 +26,8 @@
 #define	TYPE_SRC_MAC	1
 #define	TYPE_DST_MAC	2
 
+#define	ARP_HEADER_LEN	14
+
 struct frame8023_header
 {
 	struct hwaddr dst_mac; 

