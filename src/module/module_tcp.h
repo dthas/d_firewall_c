@@ -27,12 +27,12 @@
 #define	TYPE_TCP_DST_PORT	2
 
 #define	TMP_TCP_PACKET_LEN	4096
-#define	HACKDATA_LEN	4096
+
 
 #define TCP_HEADER_LENGTH		20
 #define TCP_HEADER_LENGTH_IN_DWORD	5		//5*4=20
 #define PTCP_HEADER_LENGTH		12
-#define	PROTOCOL_TCP		0x06
+
 
 /*
 #define FIN_BIT				0x1

@@ -27,6 +27,11 @@
 #define	NR_CHAR_FILE	10240
 #define	NR_CHAR_LINE	64
 
+#define	HACKDATA_LEN	4096
+
+#define	PROTOCOL_TCP		0x06
+#define	PROTOCOL_UDP		0x11
+
 
 
 

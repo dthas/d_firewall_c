@@ -95,7 +95,7 @@ unsigned int pre_routing(unsigned int hooknum,struct sk_buff *skb,const struct n
 					//return icmpv4_modi_main(skb);
 					break;
 				case IPPROTO_TCP:
-					//return tcp_trans_info(skb); 
+					return tcp_trans_info(skb); 
 
 					//return tcp_modi_main(skb);
 
@@ -103,12 +103,16 @@ unsigned int pre_routing(unsigned int hooknum,struct sk_buff *skb,const struct n
 					//return arp_modi_main(skb);
 
 					//修改tcp数据包内容
-					return tcp_data_hack(skb);
+					//return tcp_data_hack(skb);
+					//return tcp_data_hack_renew(skb);
 					break;
 				case IPPROTO_UDP:
 					//return udp_trans_info(skb); 
 
 					//return udp_modi_main(skb);
+
+					//修改udp数据包内容
+					//return udp_data_hack(skb);
 					break;
 				default:
 					return NF_ACCEPT;

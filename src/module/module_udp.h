@@ -26,6 +26,7 @@
 #define	TYPE_UDP_SRC_PORT	1
 #define	TYPE_UDP_DST_PORT	2
 
+#define	UDP_HEADER_LENGTH	8
 
 
 

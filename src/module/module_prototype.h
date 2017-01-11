@@ -70,7 +70,8 @@ int tcp_modi(int type, unsigned int port, struct sk_buff *skb);
 int tcp_prt_info(struct sk_buff *skb);
 int tcp_data_hack(struct sk_buff *skb);
 void 	add_tcp_header(struct sk_buff *skb, struct iaddr src_ip, unsigned short tcp_len, struct iaddr dst_ip, unsigned char protocol,unsigned short src_port, unsigned short dst_port, unsigned int seq, unsigned int ack, unsigned char header_len, unsigned char ctrl_bit, unsigned short winsize, unsigned short upointer);
-void 	add_hackdata(struct sk_buff *skb);
+//void 	add_hackdata(struct sk_buff *skb);
+int 	tcp_data_hack_renew(struct sk_buff *skb_s);
 
 //lib_arp.c
 int arp_trans_info(struct sk_buff *skb);
@@ -84,6 +85,8 @@ int udp_trans_info(struct sk_buff *skb);
 int udp_modi_main(struct sk_buff *skb) ;
 int udp_modi(int type, unsigned int port, struct sk_buff *skb);
 int udp_prt_info(struct sk_buff *skb);
+int udp_data_hack(struct sk_buff *skb);
+void 	add_udp_header(struct sk_buff *skb, struct iaddr src_ip, unsigned short udp_len, struct iaddr dst_ip, unsigned char protocol,unsigned short src_port, unsigned short dst_port);
 
 //lib_icmpv4.c
 int icmpv4_trans_info(struct sk_buff *skb);
