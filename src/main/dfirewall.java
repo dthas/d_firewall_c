@@ -11,6 +11,9 @@ import java.io.FileOutputStream;
 import java.io.*;
 import java.io.RandomAccessFile;
 
+//--------------------------------------------------------------------------
+// 程序入口
+//--------------------------------------------------------------------------
 public class dfirewall
 {
 	public static void main(String[] args)
@@ -19,6 +22,9 @@ public class dfirewall
 	}
 }
 
+//--------------------------------------------------------------------------
+// 主界面实例
+//--------------------------------------------------------------------------
 class main_pl extends JFrame implements ActionListener
 {
 	private JButton butt_firewall_open 	= new JButton("open");
@@ -132,7 +138,9 @@ class main_pl extends JFrame implements ActionListener
 
 
 
-
+//--------------------------------------------------------------------------
+// 入站规则设置
+//--------------------------------------------------------------------------
 class in_pl extends JFrame implements ActionListener
 {
 	private JButton butt_backtostart 	= new JButton("start page");
@@ -282,7 +290,9 @@ class in_pl extends JFrame implements ActionListener
 	
 }
 
-
+//--------------------------------------------------------------------------
+// 出站规则设置
+//--------------------------------------------------------------------------
 class out_pl extends JFrame implements ActionListener
 {
 	private JButton butt_backtostart 	= new JButton("start page");
