@@ -1,0 +1,433 @@
+package dfirewall;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.*;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.*;
+import java.io.RandomAccessFile;
+
+public class dfirewall
+{
+	public static void main(String[] args)
+	{
+		main_pl p2 = new main_pl();
+	}
+}
+
+class main_pl extends JFrame implements ActionListener
+{
+	private JButton butt_firewall_open 	= new JButton("open");
+	private JButton butt_firewall_close 	= new JButton("close");
+
+	private JButton butt_in_main	 	= new JButton("rules in");
+	private JButton butt_out_main 		= new JButton("rules out");
+
+	private JButton butt_backtostart 	= new JButton("start page");
+
+	private	JFrame frame 		= new JFrame();
+
+	private JPanel p_main_head	= new JPanel();
+	private JPanel p_main_body	= new JPanel();
+	private JPanel p_main_bottom	= new JPanel();
+
+	//public	String str_txt;
+
+	public main_pl()
+	{
+		//设置按钮大小，在panel中的位置
+		butt_firewall_open.setBounds(0,0,120,30);
+		butt_firewall_close.setBounds(130,0,120,30);
+		butt_in_main.setBounds(0,0,120,30);
+		butt_out_main.setBounds(130,0,120,30);
+		butt_backtostart.setBounds(0,0,120,30);
+
+		//设置panel的大小
+		p_main_head.setBounds(0,0,400,50);
+		p_main_body.setBounds(0,100,400,400);
+		p_main_bottom.setBounds(0,500,400,50);
+
+		//设置frame的header
+		p_main_head.add(butt_firewall_open);
+		p_main_head.add(butt_firewall_close);		
+		p_main_head.setVisible(true);		
+		p_main_head.setLayout(null);
+		p_main_head.setBackground(Color.yellow);
+		p_main_head.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 0));
+
+		//设置frame的body
+		p_main_body.add(butt_in_main);
+		p_main_body.add(butt_out_main);
+		p_main_body.setVisible(true);		
+		p_main_body.setLayout(null);
+		p_main_body.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 0));
+		
+		//设置frame的foot
+		p_main_bottom.add(butt_backtostart);
+		p_main_bottom.setVisible(true);		
+		p_main_bottom.setLayout(null);
+		p_main_bottom.setBackground(Color.yellow);
+		p_main_bottom.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 0));
+
+		//设置按钮的相应事件
+		butt_firewall_open.addActionListener(this);
+		butt_firewall_close.addActionListener(this);
+		butt_in_main.addActionListener(this);
+		butt_out_main.addActionListener(this);
+		butt_backtostart.addActionListener(this);
+		butt_firewall_open.setActionCommand("butt_firewall_open");
+		butt_firewall_close.setActionCommand("butt_firewall_close");
+		butt_in_main.setActionCommand("butt_in_main");
+		butt_out_main.setActionCommand("butt_out_main");
+		butt_backtostart.setActionCommand("butt_backtostart");
+
+		//在frame中添加 header, body, foot（每一个都是一个panel）
+		frame.add(p_main_head);
+		frame.add(p_main_body);
+		frame.add(p_main_bottom);		
+
+		//设置frame的其他属性
+		frame.setLayout(null);					//不使用布局管理器
+		frame.setTitle("dfirewall");				//设置标题
+		frame.setSize(400,600);					//设置 frame 大小
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+
+		//str_txt		= txt_port.getText();
+	}
+
+	public void actionPerformed(ActionEvent e)
+	{
+		if(e.getActionCommand().equals("butt_firewall_open"))
+		{
+			
+		}
+		else if(e.getActionCommand().equals("butt_firewall_close"))
+		{
+			
+		}
+		else if(e.getActionCommand().equals("butt_in_main"))
+		{
+			in_pl p2 = new in_pl();
+
+			frame.dispose();
+		}
+		else if(e.getActionCommand().equals("butt_out_main"))
+		{
+			out_pl p2 = new out_pl();
+
+			frame.dispose();
+		}
+		else if(e.getActionCommand().equals("butt_backtostart"))
+		{
+			
+		}
+	}	
+}
+
+
+
+
+class in_pl extends JFrame implements ActionListener
+{
+	private JButton butt_backtostart 	= new JButton("start page");
+
+	private JButton butt_in_stop_port	= new JButton("stop");
+	private JButton butt_in_start_port	= new JButton("start");
+
+	public JTextField txt_in_stop_ip	= new JTextField(10);
+	public JTextField txt_in_start_ip	= new JTextField(10);
+	public JTextField txt_in_stop_port	= new JTextField(3);
+	public JTextField txt_in_start_port	= new JTextField(3);
+	
+	private	JFrame frame 		= new JFrame();
+
+	private JPanel p_main_body	= new JPanel();
+	private JPanel p_main_bottom	= new JPanel();
+
+	private JLabel label_stop_ip	=new JLabel("ip:");
+	private JLabel label_stop_port	=new JLabel("port:");
+	private JLabel label_start_ip	=new JLabel("ip:");
+	private JLabel label_start_port	=new JLabel("port:");
+	
+
+	//public	String str_txt;
+
+	public in_pl()
+	{
+		//设置按钮大小，在panel中的位置
+		label_stop_ip.setBounds(10,10,20,30);
+		txt_in_stop_ip.setBounds(40,10,120,30);
+		label_stop_port.setBounds(170,10,40,30);
+		txt_in_stop_port.setBounds(210,10,50,30);		
+		butt_in_stop_port.setBounds(270,10,100,30);
+
+		label_start_ip.setBounds(10,60,20,30);
+		txt_in_start_ip.setBounds(40,60,120,30);
+		label_start_port.setBounds(170,60,40,30);
+		txt_in_start_port.setBounds(210,60,50,30);		
+		butt_in_start_port.setBounds(270,60,100,30);
+
+		butt_backtostart.setBounds(0,0,120,30);
+
+		//设置panel的大小
+		p_main_body.setBounds(0,0,400,400);
+		p_main_bottom.setBounds(0,500,400,50);
+
+		//设置frame的body
+		p_main_body.add(txt_in_stop_port);
+		p_main_body.add(txt_in_stop_ip);
+		p_main_body.add(txt_in_start_port);
+		p_main_body.add(txt_in_start_ip);
+		p_main_body.add(butt_in_stop_port);		
+		p_main_body.add(butt_in_start_port);
+		p_main_body.add(label_stop_ip);
+		p_main_body.add(label_stop_port);
+		p_main_body.add(label_start_ip);
+		p_main_body.add(label_start_port);
+		p_main_body.setVisible(true);		
+		p_main_body.setLayout(null);
+		p_main_body.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 0));
+		
+		//设置frame的foot
+		p_main_bottom.add(butt_backtostart);
+		p_main_bottom.setVisible(true);		
+		p_main_bottom.setLayout(null);
+		p_main_bottom.setBackground(Color.yellow);
+		p_main_bottom.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 0));
+	
+		//设置按钮的相应事件
+		txt_in_stop_port.addActionListener(this);
+		butt_in_stop_port.addActionListener(this);
+		txt_in_start_port.addActionListener(this);
+		butt_in_start_port.addActionListener(this);
+		butt_backtostart.addActionListener(this);
+		txt_in_stop_port.setActionCommand("txt_in_stop_port");
+		butt_in_stop_port.setActionCommand("butt_in_stop_port");
+		txt_in_start_port.setActionCommand("txt_in_start_port");
+		butt_in_start_port.setActionCommand("butt_in_start_port");
+		butt_backtostart.setActionCommand("butt_backtostart");
+		
+		//在frame中添加 body, foot（每一个都是一个panel）
+		frame.add(p_main_body);
+		frame.add(p_main_bottom);
+
+		//设置frame的其他属性
+		frame.setLayout(null);					//不使用布局管理器
+		frame.setTitle("Rules in:");
+		frame.setSize(400,600);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+
+		//str_txt		= txt_port.getText();
+	}
+
+
+	public void actionPerformed(ActionEvent e)
+	{
+		if(e.getActionCommand().equals("txt_in_stop_port"))
+		{
+			
+		}
+		else if(e.getActionCommand().equals("butt_in_stop_port"))
+		{
+			try
+			{
+				RandomAccessFile randomFile = new RandomAccessFile("txt_in_stop_ip_port.txt", "rw");
+				long fileLength = randomFile.length();
+				randomFile.seek(fileLength);
+				randomFile.writeBytes(txt_in_stop_ip.getText());
+				randomFile.writeBytes(" :");
+				randomFile.writeBytes(txt_in_stop_port.getText());
+				randomFile.writeBytes("\n");
+				randomFile.close();
+			}
+			catch(Exception ee)
+			{}
+		}
+		else if(e.getActionCommand().equals("txt_in_start_port"))
+		{
+			
+		}
+		else if(e.getActionCommand().equals("butt_in_start_port"))
+		{
+			try
+			{
+				RandomAccessFile randomFile = new RandomAccessFile("txt_in_start_ip_port.txt", "rw");
+				long fileLength = randomFile.length();
+				randomFile.seek(fileLength);
+				randomFile.writeBytes(txt_in_start_ip.getText());
+				randomFile.writeBytes(" :");
+				randomFile.writeBytes(txt_in_start_port.getText());
+				randomFile.writeBytes("\n");
+
+				randomFile.close();
+			}
+			catch(Exception ee)
+			{}
+		}
+		else if(e.getActionCommand().equals("butt_backtostart"))
+		{
+			main_pl p2 = new main_pl();
+
+			frame.dispose();
+		}
+	}	
+	
+}
+
+
+class out_pl extends JFrame implements ActionListener
+{
+	private JButton butt_backtostart 	= new JButton("start page");
+
+	private JButton butt_out_stop_port	= new JButton("stop");
+	private JButton butt_out_start_port	= new JButton("start");
+
+	public JTextField txt_out_stop_ip	= new JTextField(10);
+	public JTextField txt_out_start_ip	= new JTextField(10);
+	public JTextField txt_out_stop_port	= new JTextField(3);
+	public JTextField txt_out_start_port	= new JTextField(3);
+	
+	private	JFrame frame 		= new JFrame();
+
+	private JPanel p_main_body	= new JPanel();
+	private JPanel p_main_bottom	= new JPanel();
+
+	private JLabel label_stop_ip	=new JLabel("ip:");
+	private JLabel label_stop_port	=new JLabel("port:");
+	private JLabel label_start_ip	=new JLabel("ip:");
+	private JLabel label_start_port	=new JLabel("port:");
+	
+
+	//public	String str_txt;
+
+	public out_pl()
+	{
+		//设置按钮大小，在panel中的位置
+		label_stop_ip.setBounds(10,10,20,30);
+		txt_out_stop_ip.setBounds(40,10,120,30);
+		label_stop_port.setBounds(170,10,40,30);
+		txt_out_stop_port.setBounds(210,10,50,30);		
+		butt_out_stop_port.setBounds(270,10,100,30);
+
+		label_start_ip.setBounds(10,60,20,30);
+		txt_out_start_ip.setBounds(40,60,120,30);
+		label_start_port.setBounds(170,60,40,30);
+		txt_out_start_port.setBounds(210,60,50,30);		
+		butt_out_start_port.setBounds(270,60,100,30);
+
+		butt_backtostart.setBounds(0,0,120,30);
+
+		//设置panel的大小
+		p_main_body.setBounds(0,0,400,400);
+		p_main_bottom.setBounds(0,500,400,50);
+
+		//设置frame的body
+		p_main_body.add(txt_out_stop_port);
+		p_main_body.add(txt_out_stop_ip);
+		p_main_body.add(txt_out_start_port);
+		p_main_body.add(txt_out_start_ip);
+		p_main_body.add(butt_out_stop_port);		
+		p_main_body.add(butt_out_start_port);
+		p_main_body.add(label_stop_ip);
+		p_main_body.add(label_stop_port);
+		p_main_body.add(label_start_ip);
+		p_main_body.add(label_start_port);
+		p_main_body.setVisible(true);		
+		p_main_body.setLayout(null);
+		p_main_body.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 0));
+		
+		//设置frame的foot
+		p_main_bottom.add(butt_backtostart);
+		p_main_bottom.setVisible(true);		
+		p_main_bottom.setLayout(null);
+		p_main_bottom.setBackground(Color.yellow);
+		p_main_bottom.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 0));
+	
+		//设置按钮的相应事件
+		txt_out_stop_port.addActionListener(this);
+		butt_out_stop_port.addActionListener(this);
+		txt_out_start_port.addActionListener(this);
+		butt_out_start_port.addActionListener(this);
+		butt_backtostart.addActionListener(this);
+		txt_out_stop_port.setActionCommand("txt_out_stop_port");
+		butt_out_stop_port.setActionCommand("butt_out_stop_port");
+		txt_out_start_port.setActionCommand("txt_out_start_port");
+		butt_out_start_port.setActionCommand("butt_out_start_port");
+		butt_backtostart.setActionCommand("butt_backtostart");
+		
+		//在frame中添加 body, foot（每一个都是一个panel）
+		frame.add(p_main_body);
+		frame.add(p_main_bottom);
+
+		//设置frame的其他属性
+		frame.setLayout(null);					//不使用布局管理器
+		frame.setTitle("Rules out:");
+		frame.setSize(400,600);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+
+		//str_txt		= txt_port.getText();
+	}
+
+
+	public void actionPerformed(ActionEvent e)
+	{
+		if(e.getActionCommand().equals("txt_out_stop_port"))
+		{
+			
+		}
+		else if(e.getActionCommand().equals("butt_out_stop_port"))
+		{
+			try
+			{
+				RandomAccessFile randomFile = new RandomAccessFile("txt_out_stop_ip_port.txt", "rw");
+				long fileLength = randomFile.length();
+				randomFile.seek(fileLength);
+				randomFile.writeBytes(txt_out_stop_ip.getText());
+				randomFile.writeBytes(" :");
+				randomFile.writeBytes(txt_out_stop_port.getText());
+				randomFile.writeBytes("\n");
+				randomFile.close();
+			}
+			catch(Exception ee)
+			{}
+		}
+		else if(e.getActionCommand().equals("txt_out_start_port"))
+		{
+			
+		}
+		else if(e.getActionCommand().equals("butt_out_start_port"))
+		{
+			try
+			{
+				RandomAccessFile randomFile = new RandomAccessFile("txt_out_start_ip_port.txt", "rw");
+				long fileLength = randomFile.length();
+				randomFile.seek(fileLength);
+				randomFile.writeBytes(txt_out_start_ip.getText());
+				randomFile.writeBytes(" :");
+				randomFile.writeBytes(txt_out_start_port.getText());
+				randomFile.writeBytes("\n");
+
+				randomFile.close();
+			}
+			catch(Exception ee)
+			{}
+		}
+		else if(e.getActionCommand().equals("butt_backtostart"))
+		{
+			main_pl p2 = new main_pl();
+
+			frame.dispose();
+		}
+	}	
+	
+}

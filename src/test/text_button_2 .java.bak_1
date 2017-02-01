@@ -1,0 +1,215 @@
+package txt_button;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.*;
+import java.io.RandomAccessFile;
+
+public class text_button_2
+{
+	public static void main(String[] args)
+	{
+		main_pl p2 = new main_pl();
+	}
+}
+
+//class main_pl extends JFrame implements ActionListener
+class main_pl extends JFrame
+{
+	private JButton butt_firewall_open 	= new JButton("open");
+	private JButton butt_firewall_close 	= new JButton("close");
+
+	private JButton butt_in_main	 	= new JButton("rules in");
+	private JButton butt_out_main 		= new JButton("rules out");
+
+	private JButton butt_backtostart 	= new JButton("start page");
+
+	private	JFrame frame 		= new JFrame();
+
+	private JPanel p_main_head	= new JPanel();
+	private JPanel p_main_body	= new JPanel();
+	private JPanel p_main_bottom	= new JPanel();
+
+	//public	String str_txt;
+
+	public main_pl()
+	{
+		//为按钮添加监听器
+		//butt_firewall_open.addActionListener(this);
+
+		frame.setLayout(new FlowLayout());
+
+		p_main_head.add(butt_firewall_open);
+		p_main_head.add(butt_firewall_close);		
+		p_main_head.setVisible(true);		
+		p_main_head.setLayout(new FlowLayout());
+
+		p_main_body.add(butt_in_main);
+		p_main_body.add(butt_out_main);
+		p_main_body.setVisible(true);		
+		p_main_body.setLayout(new FlowLayout());
+
+		p_main_bottom.add(butt_backtostart);
+		p_main_bottom.setVisible(true);		
+		p_main_bottom.setLayout(new FlowLayout());
+
+		//frame.setLayout(null);
+		p_main_head.setSize(400,100);
+		p_main_body.setSize(400,400);
+		p_main_bottom.setSize(400,100);
+
+		p_main_head.setLocation(400,100);
+		p_main_body.setLocation(400,400);
+		p_main_bottom.setLocation(400,100);
+
+		
+		ActionListener listener = new ChangeListener(butt_firewall_open,p_main_head,frame);
+		butt_firewall_open.addActionListener(listener);//注册监听器
+
+
+		frame.add(p_main_head);
+
+		frame.add(p_main_body);
+
+		frame.add(p_main_bottom);
+
+		
+
+		frame.setTitle("dfirewall");
+		frame.setSize(400,600);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+
+		//str_txt		= txt_port.getText();
+	}
+
+
+	public void actionPerformed(ActionEvent e)
+	{
+		//System.out.println(txt_port.getText());
+
+		try
+		{
+			RandomAccessFile randomFile = new RandomAccessFile("hello.txt", "rw");
+			long fileLength = randomFile.length();
+			randomFile.seek(fileLength);
+			randomFile.writeBytes(butt_firewall_open.getText());
+			randomFile.close();
+		}
+		catch(Exception ee)
+		{}
+	}
+	
+}
+
+
+//class in_pl extends JFrame implements ActionListener
+class in_pl extends JFrame
+{
+	private JButton butt_backtostart 	= new JButton("start page");
+
+	private JButton butt_in_stop_port	= new JButton("stop");
+	private JButton butt_in_start_port	= new JButton("start");
+
+	public JTextField txt_in_stop_port	= new JTextField(20);
+	public JTextField txt_in_start_port	= new JTextField(20);
+	
+	private	JFrame frame 		= new JFrame();
+
+	private JPanel p_main_body	= new JPanel();
+	private JPanel p_main_bottom	= new JPanel();
+
+	//public	String str_txt;
+
+	public in_pl()
+	{
+		//为按钮添加监听器
+		//butt_in_stop_port.addActionListener(this);
+	
+		frame.setLayout(new FlowLayout());
+
+		p_main_body.add(txt_in_stop_port);
+		p_main_body.add(butt_in_stop_port);
+		p_main_body.add(txt_in_start_port);
+		p_main_body.add(butt_in_start_port);
+		p_main_body.setVisible(true);		
+		p_main_body.setLayout(new FlowLayout());
+
+		p_main_bottom.add(butt_backtostart);
+		p_main_bottom.setVisible(true);		
+		p_main_bottom.setLayout(new FlowLayout());
+
+		ActionListener listener = new ChangeListener(butt_in_stop_port,p_main_body,frame);
+		butt_in_stop_port.addActionListener(listener);//注册监听器
+
+		frame.add(p_main_body);
+		frame.add(p_main_bottom);
+
+		frame.setTitle("Rules in:");
+		frame.setSize(400,600);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+
+		//str_txt		= txt_port.getText();
+	}
+
+
+	public void actionPerformed(ActionEvent e)
+	{
+		//System.out.println(txt_port.getText());
+
+		try
+		{
+			//FileWriter fw	= new FileWriter("hello.txt");
+     			//fw.write(txt_port.getText());  
+         		//fw.close();
+
+			RandomAccessFile randomFile = new RandomAccessFile("hello.txt", "rw");
+			long fileLength = randomFile.length();
+			randomFile.seek(fileLength);
+			randomFile.writeBytes(txt_in_stop_port.getText());
+			randomFile.close();
+		}
+		catch(Exception ee)
+		{}
+	}
+	
+}
+
+class ChangeListener implements ActionListener
+{
+	JButton button;
+	JPanel panel;
+	JTextField text;
+
+	public ChangeListener(JButton button, JPanel panel, JTextField text)
+	{
+		super();
+		this.button = button;
+		this.panel = panel;
+		this.text = text;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e)
+	{
+		if("change".equals(e.getActionCommand()))
+		{
+			panel.remove(button);
+			panel.add(text);
+			panel.updateUI();
+			panel.repaint();
+		}
+	}
+}
