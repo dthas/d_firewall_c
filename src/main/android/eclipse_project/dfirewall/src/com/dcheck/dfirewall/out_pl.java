@@ -1,0 +1,49 @@
+package com.dcheck.dfirewall;
+
+import android.app.Activity;
+//import android.content.DialogInterface.OnClickListener;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button; 
+
+public class out_pl extends Activity
+{
+	protected void onCreate(Bundle savedInstanceState) 
+	{
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.in_pl);
+		
+		Button btn1;  
+		Button btn2;
+		Button btn3;
+		
+		btn1 = (Button)findViewById(R.id.button_1);  
+	    btn2 = (Button)findViewById(R.id.button_2);  
+	    btn3 = (Button)findViewById(R.id.button_3);
+	
+	    btn1.setOnClickListener(new Button.OnClickListener()
+	    {
+	    	public void onClick(View v)
+	    	{  
+	            
+	        }              
+	    });  
+	    
+	    btn2.setOnClickListener(new Button.OnClickListener()
+	    {
+	    	public void onClick(View v)
+	    	{  
+	            
+	        }              
+	    }); 
+	    
+	    btn3.setOnClickListener(new Button.OnClickListener()
+	    {
+	    	public void onClick(View v)
+	    	{  
+	    		finish();
+	        }              
+	    }); 
+	}
+}

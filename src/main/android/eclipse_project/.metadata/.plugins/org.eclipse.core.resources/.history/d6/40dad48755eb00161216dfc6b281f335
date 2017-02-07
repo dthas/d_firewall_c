@@ -1,0 +1,40 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:orientation="horizontal" >
+
+<Button
+android:id="@+id/button_1"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:layout_weight="1"
+android:text="Open" />
+
+<Button
+android:id="@+id/button_2"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:layout_weight="1"
+android:text="Close" />
+
+<TextView
+android:id="@+id/text_view"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:text="dfirewall" />
+
+</LinearLayout>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="fill_parent"
+android:layout_height="wrap_content"
+android:orientation="horizontal" >
+
+<TextView
+android:id="@+id/text_view"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:text="dfirewall" />
+
+</LinearLayout>

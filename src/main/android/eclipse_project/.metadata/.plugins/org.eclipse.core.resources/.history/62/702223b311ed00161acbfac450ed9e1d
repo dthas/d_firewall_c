@@ -1,0 +1,163 @@
+package com.dcheck.dfirewall;
+
+import android.app.Activity;
+//import android.content.DialogInterface.OnClickListener;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button; 
+
+public class in_pl
+{
+	private Button btn1;  
+	private Button btn2;  
+	private Button btn3;
+    
+	btn1 = (Button)findViewById(R.id.button_1);  
+    btn2 = (Button)findViewById(R.id.button_2);  
+    btn3 = (Button)findViewById(R.id.button_3); 
+
+	public JTextField txt_in_stop_ip	= new JTextField(10);
+	public JTextField txt_in_start_ip	= new JTextField(10);
+	public JTextField txt_in_stop_port	= new JTextField(3);
+	public JTextField txt_in_start_port	= new JTextField(3);
+	
+	private	JFrame frame 		= new JFrame();
+
+	private JPanel p_main_body	= new JPanel();
+	private JPanel p_main_bottom	= new JPanel();
+
+	private JLabel label_stop_ip	=new JLabel("ip:");
+	private JLabel label_stop_port	=new JLabel("port:");
+	private JLabel label_start_ip	=new JLabel("ip:");
+	private JLabel label_start_port	=new JLabel("port:");
+	
+
+	//public	String str_txt;
+
+	public in_pl()
+	{
+		//设置按钮大小，在panel中的位置
+		label_stop_ip.setBounds(10,10,20,30);
+		txt_in_stop_ip.setBounds(40,10,120,30);
+		label_stop_port.setBounds(170,10,40,30);
+		txt_in_stop_port.setBounds(210,10,50,30);		
+		butt_in_stop_port.setBounds(270,10,100,30);
+
+		label_start_ip.setBounds(10,60,20,30);
+		txt_in_start_ip.setBounds(40,60,120,30);
+		label_start_port.setBounds(170,60,40,30);
+		txt_in_start_port.setBounds(210,60,50,30);		
+		butt_in_start_port.setBounds(270,60,100,30);
+
+		butt_backtostart.setBounds(0,0,120,30);
+
+		//设置panel的大小
+		p_main_body.setBounds(0,0,400,400);
+		p_main_bottom.setBounds(0,500,400,50);
+
+		//设置frame的body
+		p_main_body.add(txt_in_stop_port);
+		p_main_body.add(txt_in_stop_ip);
+		p_main_body.add(txt_in_start_port);
+		p_main_body.add(txt_in_start_ip);
+		p_main_body.add(butt_in_stop_port);		
+		p_main_body.add(butt_in_start_port);
+		p_main_body.add(label_stop_ip);
+		p_main_body.add(label_stop_port);
+		p_main_body.add(label_start_ip);
+		p_main_body.add(label_start_port);
+		p_main_body.setVisible(true);		
+		p_main_body.setLayout(null);
+		p_main_body.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 0));
+		
+		//设置frame的foot
+		p_main_bottom.add(butt_backtostart);
+		p_main_bottom.setVisible(true);		
+		p_main_bottom.setLayout(null);
+		p_main_bottom.setBackground(Color.yellow);
+		p_main_bottom.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 0));
+	
+		//设置按钮的相应事件
+		txt_in_stop_port.addActionListener(this);
+		butt_in_stop_port.addActionListener(this);
+		txt_in_start_port.addActionListener(this);
+		butt_in_start_port.addActionListener(this);
+		butt_backtostart.addActionListener(this);
+		txt_in_stop_port.setActionCommand("txt_in_stop_port");
+		butt_in_stop_port.setActionCommand("butt_in_stop_port");
+		txt_in_start_port.setActionCommand("txt_in_start_port");
+		butt_in_start_port.setActionCommand("butt_in_start_port");
+		butt_backtostart.setActionCommand("butt_backtostart");
+		
+		//在frame中添加 body, foot（每一个都是一个panel）
+		frame.add(p_main_body);
+		frame.add(p_main_bottom);
+
+		//设置frame的其他属性
+		frame.setLayout(null);					//不使用布局管理器
+		frame.setTitle("Rules in:");
+		frame.setSize(400,600);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+
+		//str_txt		= txt_port.getText();
+	}
+
+
+	public void actionPerformed(ActionEvent e)
+	{
+		if(e.getActionCommand().equals("txt_in_stop_port"))
+		{
+			
+		}
+		else if(e.getActionCommand().equals("butt_in_stop_port"))
+		{
+			try
+			{
+				RandomAccessFile randomFile = new RandomAccessFile("txt_in_stop_ip_port.txt", "rw");
+				long fileLength = randomFile.length();
+				randomFile.seek(fileLength);
+				randomFile.writeBytes(txt_in_stop_ip.getText());
+				randomFile.writeBytes(" :");
+				randomFile.writeBytes(txt_in_stop_port.getText());
+				randomFile.writeBytes("\n");
+				randomFile.close();
+			}
+			catch(Exception ee)
+			{}
+		}
+		else if(e.getActionCommand().equals("txt_in_start_port"))
+		{
+			
+		}
+		else if(e.getActionCommand().equals("butt_in_start_port"))
+		{
+			try
+			{
+				RandomAccessFile randomFile = new RandomAccessFile("txt_in_start_ip_port.txt", "rw");
+				long fileLength = randomFile.length();
+				randomFile.seek(fileLength);
+				randomFile.writeBytes(txt_in_start_ip.getText());
+				randomFile.writeBytes(" :");
+				randomFile.writeBytes(txt_in_start_port.getText());
+				randomFile.writeBytes("\n");
+
+				randomFile.close();
+			}
+			catch(Exception ee)
+			{}
+		}
+		else if(e.getActionCommand().equals("butt_backtostart"))
+		{
+			main_pl p2 = new main_pl();
+
+			frame.dispose();
+		}
+	}	
+	
+}
