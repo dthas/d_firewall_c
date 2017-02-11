@@ -16,7 +16,7 @@ android:orientation="vertical" >
 				android:text="ip:" />
 	        
 	        <EditText
-				android:id="@+id/edit_text_1"
+				android:id="@+id/et_ip_out"
 				android:layout_width="180dp"
 				android:layout_height="wrap_content"
 				
@@ -30,7 +30,7 @@ android:orientation="vertical" >
 				android:text="port:" />
 	        
 	        <EditText
-				android:id="@+id/edit_text_2"
+				android:id="@+id/et_port_out"
 				android:layout_width="80dp"
 				android:layout_height="wrap_content"
 				
