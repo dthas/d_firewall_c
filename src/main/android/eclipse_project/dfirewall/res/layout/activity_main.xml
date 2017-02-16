@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 android:layout_width="fill_parent"
-android:layout_height="wrap_content"
+android:layout_height="fill_parent"
 android:orientation="vertical" >
 
     <LinearLayout
@@ -41,7 +41,7 @@ android:orientation="vertical" >
     
 	
     <LinearLayout
-       	android:layout_width="fill_parent"
+       	android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:orientation="horizontal" >
     
@@ -50,14 +50,14 @@ android:orientation="vertical" >
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:text="Rule in" />
+			android:text="IN" />
 			
 			<Button
 			android:id="@+id/button_4"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:text="Rule out" />
+			android:text="OUT" />
 
 	</LinearLayout>
 	
@@ -65,16 +65,16 @@ android:orientation="vertical" >
 	
     <LinearLayout
        	android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+		android:layout_height="fill_parent"
 		android:orientation="horizontal" >
     
 			<Button
 			android:id="@+id/button_5"
-			android:layout_width="120dp"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
 			android:layout_gravity="bottom"
-			android:text="start page" />
+			android:text="Exit" />
 			
 			
 

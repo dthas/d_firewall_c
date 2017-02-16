@@ -1,77 +1,80 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 android:layout_width="fill_parent"
-android:layout_height="fill_parent"
+android:layout_height="wrap_content"
 android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:orientation="horizontal" >
+		android:orientation="horizontal" 
+		android:background="#f0f00f">
 		
 	        <TextView
 				android:id="@+id/text_view_1"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
-				android:text="ip:" />
+				android:text="status:" />
 	        
-	        <EditText
-				android:id="@+id/et_ip_in"
-				android:layout_width="180dp"
-				android:layout_height="wrap_content"
-				
-				/>
-
-		<TextView
+	        <TextView
 				android:id="@+id/text_view_2"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
-				android:text="port:" />
+				android:text="ON" />
 	        
-	        <EditText
-				android:id="@+id/et_port_in"
-				android:layout_width="80dp"
-				android:layout_height="wrap_content"
-				
-				/>
-	        
-	        		
-	</LinearLayout>
-	
-    <LinearLayout
-        android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:orientation="horizontal">	       
-			
-		<Button
-			android:id="@+id/button_2"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:text="Start" />
-		
-		<Button
+	        <Button
 			android:id="@+id/button_1"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:text="Stop" />
-		
+			android:text="Open" />
+			
+			<Button
+			android:id="@+id/button_2"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:text="Close" />
 	</LinearLayout>
 	
-   <LinearLayout
-       	android:layout_width="wrap_content"
-		android:layout_height="fill_parent"
+    
+	
+    <LinearLayout
+       	android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
 		android:orientation="horizontal" >
     
 			<Button
 			android:id="@+id/button_3"
-			android:layout_width="wrap_content"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:text="Rule in" />
+			
+			<Button
+			android:id="@+id/button_4"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:text="Rule out" />
+
+	</LinearLayout>
+	
+    
+	
+    <LinearLayout
+       	android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal" >
+    
+			<Button
+			android:id="@+id/button_5"
+			android:layout_width="120dp"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
 			android:layout_gravity="bottom"
-			android:text="Back" />
+			android:text="start page" />
 			
 			
 

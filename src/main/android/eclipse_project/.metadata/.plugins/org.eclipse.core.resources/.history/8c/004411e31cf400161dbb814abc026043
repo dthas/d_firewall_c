@@ -33,17 +33,7 @@ public class out_pl extends Activity
 	    btn3 = (Button)findViewById(R.id.button_3);
 	    
 	    btn2.setHeight(50);
-	    btn2.setWidth(100);
-	    
-	    btn1.setHeight(50);
-	    btn1.setWidth(100);
-	    
-	    btn3.setHeight(50);
-	    btn3.setWidth(100);
-	    
-	    //这是第一种 直接付给此button新的xy坐标
-	    //btn3.setX(10);
-	    //btn3.setY(30);
+	    btn2.setWidth(40);
 	    
 	    etip_out 	= (EditText) findViewById(R.id.et_ip_out);
 	    etport_out 	= (EditText) findViewById(R.id.et_port_out);

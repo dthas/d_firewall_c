@@ -53,15 +53,6 @@ public class in_pl extends Activity
 	    btn2 = (Button)findViewById(R.id.button_2);  
 	    btn3 = (Button)findViewById(R.id.button_3);
 	    
-	    btn2.setHeight(50);
-	    btn2.setWidth(100);
-	    
-	    btn1.setHeight(50);
-	    btn1.setWidth(100);
-	    
-	    btn3.setHeight(50);
-	    btn3.setWidth(100);
-	    
 	    etip_in 	= (EditText) findViewById(R.id.et_ip_in);
 	    etport_in 	= (EditText) findViewById(R.id.et_port_in);
 	    

@@ -16,7 +16,7 @@ android:orientation="vertical" >
 				android:text="ip:" />
 	        
 	        <EditText
-				android:id="@+id/et_ip_in"
+				android:id="@+id/et_ip_out"
 				android:layout_width="180dp"
 				android:layout_height="wrap_content"
 				
@@ -30,7 +30,7 @@ android:orientation="vertical" >
 				android:text="port:" />
 	        
 	        <EditText
-				android:id="@+id/et_port_in"
+				android:id="@+id/et_port_out"
 				android:layout_width="80dp"
 				android:layout_height="wrap_content"
 				
@@ -46,14 +46,14 @@ android:orientation="vertical" >
 			
 		<Button
 			android:id="@+id/button_2"
-			android:layout_width="fill_parent"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
 			android:text="Start" />
 		
 		<Button
 			android:id="@+id/button_1"
-			android:layout_width="fill_parent"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
 			android:text="Stop" />
@@ -71,7 +71,7 @@ android:orientation="vertical" >
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
 			android:layout_gravity="bottom"
-			android:text="Back" />
+			android:text="Exit" />
 			
 			
 
